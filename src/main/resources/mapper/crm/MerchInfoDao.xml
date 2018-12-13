@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.crm.dao.MerchInfoDao">
+
+
+	<select id="findAll" resultType="io.renren.modules.crm.entity.MerchInfoEntity">
+		SELECT * from merch_info where enabled = 1
+	</select>
+
+	<select id="findOne" resultType="io.renren.modules.crm.entity.MerchInfoEntity">
+		SELECT * from merch_info where id = #{id} and enabled = 1
+	</select>
+
+	<select id="queryList" resultType="io.renren.modules.crm.entity.MerchInfoEntity">
+		select * from merch_info where enabled = 1
+
+			<if test="merchName != null and merchName.trim() != ''">
+				and merch_name like concat('%',#{merchName},'%')
+			</if>
+			<if test="merchno != null and merchno.trim() != ''">
+				and merchno like concat('%',#{merchno},'%')
+			</if>
+			<if test="userIdList != null and userIdList.size() > 0">
+				and user_id  IN
+				<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+					#{userId}
+				</foreach>
+			</if>
+			order by id desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from merch_info where enabled = 1
+		<if test="merchName != null and merchName.trim() != ''">
+			and merch_name like concat('%',#{merchName},'%')
+		</if>
+		<if test="merchno != null and merchno.trim() != ''">
+			and merchno like concat('%',#{merchno},'%')
+		</if>
+		<if test="userIdList != null and userIdList.size() > 0">
+			and user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+	</select>
+
+	<insert id="save" parameterType="io.renren.modules.crm.entity.MerchInfoEntity" >
+		insert into merch_info
+		(
+			`merchno`,
+			`merch_name`,
+			`merch_type`,
+			`legal_name`,
+			`mobile`,
+			`address`,
+			`status`,
+			`quick_settle`,
+			`industry`,
+			`merchno_sub`,
+			`user_id`,
+			`create_time`,
+			`update_time`
+		)
+		values
+		(
+			#{merchno},
+			#{merchName},
+			#{merchType},
+			#{legalName},
+			#{mobile},
+			#{address},
+			#{status},
+			#{quickSettle},
+			#{industry},
+			#{merchnoSub},
+			#{userId},
+			now(),
+			now()
+		)
+	</insert>
+
+	<update id="update">
+		update merch_info
+		<set>
+			<if test="merchno != null">`merchno` = #{merchno}, </if>
+			<if test="merchName != null">`merch_name` = #{merchName},</if>
+			<if test="legalName != null">`legal_name` = #{legalName}, </if>
+			<if test="mobile != null">`mobile` = #{mobile},</if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="industry != null">`industry` = #{industry}, </if>
+			<if test="merchnoSub != null">`merchno_sub` = #{merchnoSub},</if>
+			<if test="userId != null">`user_id` = #{userId},</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="deleteBatch">
+		UPDATE merch_info set enabled = 0
+		WHERE id in
+		<foreach item="merchId" collection="array" open="(" separator="," close=")">
+			#{merchId}
+		</foreach>
+	</update>
+
+	<select id="queryByUserId" resultType="io.renren.modules.crm.entity.MerchInfoEntity">
+
+		select * from merch_info where enabled = 1
+		and user_id  IN
+		<foreach collection="list" item="userId" index="index" open="(" close=")" separator=",">
+			#{userId}
+		</foreach>
+
+	</select>
+
+</mapper>

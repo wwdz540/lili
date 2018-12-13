@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.crm.dao.TransDataDao">
+
+	<select id="findOne" resultType="io.renren.modules.crm.entity.TransDataEntity">
+		SELECT * from trans_data where id = #{id}
+	</select>
+
+
+	<select id="queryList" resultType="io.renren.modules.crm.entity.TransDataEntity">
+		select t.*, m.merch_name AS merchName from trans_data t
+		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		WHERE
+		m.enabled = 1
+		<if test="merchName != null and merchName.trim() != ''">
+			and m.merch_name like concat('%',#{merchName},'%')
+		</if>
+		<if test="userId != null">
+			and m.user_id = #{userId}
+		</if>
+		<if test="userIdList != null and userIdList.size() > 0">
+			and m.user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+		<if test="dateStart != null">
+			and t.txn_dateTime &gt;= #{dateStart}
+		</if>
+		<if test="dateEnd != null">
+			and t.txn_dateTime &lt;= #{dateEnd}
+		</if>
+		<if test="merchno !=null">
+			and t.merchantId = #{merchno}
+		</if>
+		order by t.id asc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select COUNT(t.id) from trans_data t
+		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		WHERE  m.enabled = 1
+		<if test="merchName != null and merchName.trim() != ''">
+			and m.merch_name like concat('%',#{merchName},'%')
+		</if>
+		<if test="userIdList != null and userIdList.size() > 0">
+			and m.user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+		<if test="dateStart != null">
+			and t.txn_dateTime &gt;= #{dateStart}
+		</if>
+		<if test="dateEnd != null">
+			and t.txn_dateTime &lt;= #{dateEnd}
+		</if>
+		<if test="merchno !=null">
+			and t.merchantId = #{merchno}
+		</if>
+	</select>
+
+	<select id="queryTodayData" resultType="io.renren.modules.crm.entity.TransDataEntity">
+		select t.* from trans_data t
+		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		WHERE m.enabled = 1
+		AND t.txn_dateTime &gt;= #{date}
+		<if test="userIdList != null and userIdList.size() > 0">
+			and m.user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="groupByCardType" resultType="io.renren.modules.crm.model.GroupByCardType">
+		select t.cardType AS cardType ,sum(t.amt) AS amt
+		from trans_data t
+		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		WHERE m.enabled = 1
+		<if test="merchName != null and merchName.trim() != ''">
+			and m.merch_name like concat('%',#{merchName},'%')
+		</if>
+		<if test="userIdList != null and userIdList.size() > 0">
+			and m.user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+		<if test="dateStart != null">
+			and t.txn_dateTime &gt;= #{dateStart}
+		</if>
+		<if test="dateEnd != null">
+			and t.txn_dateTime &lt;= #{dateEnd}
+		</if>
+		GROUP BY t.cardType
+	</select>
+
+</mapper>

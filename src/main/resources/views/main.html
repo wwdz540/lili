@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>欢迎页</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/element-ui-index.css">
+    <script src="libs/echarts.simple.min.js"></script>
+
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="libs/jquery.min.js"></script>
+    <script src="plugins/layer/layer.js"></script>
+    <script src="libs/bootstrap.min.js"></script>
+    <script src="libs/vue.min.js"></script>
+    <script src="plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="js/common.js"></script>
+
+    <!-- 引入样式 -->
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--<script src="libs/vue.min.js"></script>-->
+</head>
+<style>
+    .el-row{
+        margin-left: -10px;
+        margin-right: -10px;
+        margin-top: 20px;
+    }
+    .el-card__header{
+        color: #fff;
+        background-color: #67c23a;
+        border-color: #67c23a;
+    }
+</style>
+<body>
+    <div id="rrapp" v-cloak>
+        <!----header start---->
+        <el-row :gutter="50">
+
+            <el-col :span="6">
+                <div class="grid-content bg-purple">
+                    <el-card class="box-card card1">
+                        <div slot="header" class="clearfix">
+                            <span>今日交易金额</span>
+                        </div>
+                        <div class="text item" id="todayAmount">
+                            999999
+                        </div>
+                    </el-card>
+                </div>
+            </el-col>
+
+            <el-col :span="6">
+                <div class="grid-content bg-purple">
+                    <el-card class="box-card card2">
+                        <div slot="header" class="clearfix">
+                            <span>今日分润</span>
+                        </div>
+                        <div class="text item" id="sharePoint">
+                            999999
+                        </div>
+                    </el-card>
+                </div>
+            </el-col>
+
+
+            <el-col :span="6">
+                <div class="grid-content bg-purple">
+                    <el-card class="box-card card3">
+                        <div slot="header" class="clearfix">
+                            <span>今日交易笔数</span>
+                        </div>
+                        <div class="text item" id="count">
+                            999999
+                        </div>
+                    </el-card>
+                </div>
+            </el-col>
+
+            <el-col :span="6">
+                <div class="grid-content bg-purple">
+                    <el-card class="box-card card4">
+                        <div slot="header" class="clearfix">
+                            <span>商户/终端数量</span>
+                        </div>
+                        <div class="text item" id="num">
+                            22/200
+                        </div>
+                    </el-card>
+                </div>
+            </el-col>
+
+        </el-row>
+        <!-- header-end----->
+
+
+        <el-row :gutter="20">
+            <el-col :span="24">
+                <div class="grid-content bg-purple-dark">
+                    <el-card class="box-card">
+                        <div id="chartmain" style="height: 400px"></div>
+                    </el-card>
+                </div>
+            </el-col>
+        </el-row>
+
+
+
+    </div>
+</body>
+<!--<script src="libs/element-ui-vue.js"></script>-->
+<script src="libs/element-ui-index.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.get(baseURL + "crm/transData/countTransData", function(r){
+            $("#todayAmount").text(r.data.amount);
+            $("#sharePoint").text(r.data.sharePoint);
+            $("#count").text(r.data.count);
+            $("#num").text(r.data.num);
+        });
+        //柱形图数据
+        var myChart = echarts.init(document.getElementById('chartmain'));
+        $.get(baseURL + "crm/transData/transData", function(r){
+            var json = r.data;
+            myChart.setOption({
+                title: { text: '在Vue中使用echarts' },
+                tooltip: {},
+                xAxis: {
+                    data:json.transTime
+                },
+                yAxis: {},
+                series: [{
+                    name: '销量',
+                    type: 'bar',
+                    data: json.amount
+                }]
+            });
+        });
+    });
+
+</script>
+<script>
+    var vm = new Vue({
+        el:'#rrapp',
+        data:{
+
+        },
+        methods:{
+
+
+        }
+    });
+</script>
+
+</html>

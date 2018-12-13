@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.crm.dao.TerminalDao">
+
+	<select id="findOne" resultType="io.renren.modules.crm.entity.TerminalEntity">
+		SELECT * from terminal where id = #{id} and enabled = 1
+	</select>
+
+
+	<select id="queryList" resultType="io.renren.modules.crm.entity.TerminalEntity">
+		select t.*,m.merch_name as merchName, m.merchno as merchno from terminal t
+		LEFT JOIN merch_info m ON t.merch_id = m.id
+		where t.enabled = 1
+		<if test="merchName != null and merchName.trim() != ''">
+			and m.merch_name like concat('%',#{merchName},'%')
+		</if>
+		<if test="terminalno != null and terminalno.trim() != ''">
+			and t.terminalno like concat('%',#{terminalno},'%')
+		</if>
+		<if test="userIdList != null and userIdList.size() > 0">
+			and m.user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+			order by t.id asc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(t.id) from terminal t
+		LEFT JOIN merch_info m ON t.merch_id = m.id
+		where t.enabled = 1
+		<if test="merchName != null and merchName.trim() != ''">
+			and m.merch_name like concat('%',#{merchName},'%')
+		</if>
+		<if test="terminalno != null and terminalno.trim() != ''">
+			and t.terminalno like concat('%',#{terminalno},'%')
+		</if>
+		<if test="userIdList != null and userIdList.size() > 0">
+			and m.user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+	</select>
+
+	<insert id="save" parameterType="io.renren.modules.crm.entity.TerminalEntity" >
+		insert into terminal
+		(
+			`merch_id`,
+			`terminalno`,
+			`create_date`,
+			`update_date`,
+			`enabled`
+		)
+		values
+		(
+			#{merchId},
+			#{terminalno},
+			now(),
+			now(),
+			1
+		)
+	</insert>
+
+	<update id="update">
+		update terminal
+		<set>
+			<if test="merchId != null">`merch_id` = #{merchId}, </if>
+			<if test="terminalno != null">`terminalno` = #{terminalno},</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="deleteBatch">
+		UPDATE terminal set enabled = 0
+		WHERE id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+</mapper>
