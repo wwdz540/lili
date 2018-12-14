@@ -15,6 +15,8 @@ import java.util.List;
 @Mapper
 public interface SysDeptDao extends BaseDao<SysDeptEntity> {
 
+
+    void saveNew(SysDeptEntity entity);
     /**
      * 查询子部门ID列表
      * @param parentId  上级部门ID

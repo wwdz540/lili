@@ -1,23 +1,43 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'crm/merchInfo/list',
+        url: baseURL + 'crm/newmerchInfo/list',
         datatype: "json",
         colModel: [
             { label: '商户ID', name: 'id', index: "id", width: 40, key: true },
+            { label: '商户名称', name: 'name', width: 75,formatter:function (v,o,merch) {
+					return v + "&nbsp&nbsp;<span style='color: #00a7d0'>["+mtype[merch.deptType]+"]</span>";
+                } },
+
 			{ label: '商户编号', name: 'merchno', width: 75},
             { label: '盛大商户编号', name: 'merchnoSub', width: 45 },
-			{ label: '商户名称', name: 'name', width: 45 },
-            { label: '父商户名', name: 'parentName', width: 45 },
-            { label: '客户姓名', name: 'legalName', width: 45 },
-			{ label: '手机号码', name: 'mobile', width: 45 },
-            { label: '商户类型', name: 'industry', width: 45 },
-			{ label: '地址', name: 'address', index: "address", width: 100}
+            { label: '父商户名称', name: 'parentName', width: 45 },
+             { label: '客户姓名', name: 'legalName', width: 45 },
+            // { label: '手机号码', name: 'mobile', width: 45 },
+            // { label: '商户类型', name: 'industry', width: 45 },
+			{ label: '地址', name: 'address', index: "address", width: 100},
+			{ label: '操作',name:'id',width: 45,formatter:function (v,o,merch) {
+					var opStr ="";
+					switch (merch.deptType)
+					{
+
+						case 1:
+							break;
+						case 2:
+						case 3:
+                            opStr = "<a href='###' onclick='vm.addChild("+merch.id+","+merch.deptType+" ,\""+merch.name+"\")'> 添加子商铺</a>";
+                            break;
+						default:
+							break;
+
+					}
+					return opStr;
+                }}
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
-        rownumbers: true, 
+        rownumbers: true,
         rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
@@ -40,25 +60,26 @@ $(function () {
     });
 });
 
+var mtype={1:"商铺",2:"代理商",3:"企业集团",4:"子帐户",5:"企业子帐户"};
+
 
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		q:{
-			merchName: null,
-            merchno: null
+            keyword:null
 		},
 		showList: true,
 		title:null,
 		users:[],
 		merch:{
-			id:null
+			id:null,
+            deptType:null,
+            parentId:1
 		}
 	},
     created: function () {
-        $.get(baseURL + "sys/user/getUsers", function(r){
-            vm.users = r.data;
-        });
+
     },
 	methods: {
 		query: function () {
@@ -67,7 +88,25 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
+			vm.merch.deptType = null;
+			vm.merch.parentId = 1;
+
 		},
+		addChild:function(parentId,dtype,parentName){
+            vm.showList = false;
+            vm.title = "新增["+parentName+"]子帐户";
+            vm.merch.parentId = parentId;
+            switch(dtype){
+				case 1:
+					break;
+				case 2:
+					vm.merch.deptType = 5;
+				case 3:
+					vm.merch.deptType = 6;
+				default:
+					vm.merch.deptType = null;
+            }
+        },
 		update: function () {
             var merchId = getSelectedRow();
             $.get(baseURL + "crm/merchInfo/info/"+merchId, function(r){
@@ -107,7 +146,7 @@ var vm = new Vue({
     		});
 		},
 		saveOrUpdate: function () {
-			var url = vm.merch.id == null ? "crm/merchInfo/save" : "crm/merchInfo/update";
+			var url = vm.merch.id == null ? "crm/newmerchInfo/save" : "crm/newmerchInfo/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,

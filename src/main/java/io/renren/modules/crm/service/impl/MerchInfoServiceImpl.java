@@ -32,10 +32,10 @@ public class MerchInfoServiceImpl implements MerchInfoService {
     public List<MerchInfoEntity> queryList(Map<String, Object> map) {
         List<MerchInfoEntity> list = merchInfoDao.queryList(map);
 
-        for (MerchInfoEntity entity : list){
-            SysUserEntity userEntity = sysUserDao.findOne(entity.getUserId());
-            entity.setUsername(userEntity.getUsername());
-        }
+//        for (MerchInfoEntity entity : list){
+//            SysUserEntity userEntity = sysUserDao.findOne(entity.getUserId());
+//            entity.setUsername(userEntity.getUsername());
+//        }
         return list;
     }
 

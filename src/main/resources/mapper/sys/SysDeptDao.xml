@@ -24,19 +24,49 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	 
+
 	<insert id="save" parameterType="io.renren.modules.sys.entity.SysDeptEntity" useGeneratedKeys="true" keyProperty="deptId">
 		insert into sys_dept
 		(
 			`parent_id`, 
 			`name`, 
-			`order_num`
+			`order_num`,
+			`dept_type`,
+			`legal_name`,
+			`mobile`,
+			`address`,
+			`industry`
 		)
 		values
 		(
 			#{parentId}, 
 			#{name}, 
-			#{orderNum}
+			#{orderNum},
+			#{deptType},
+			#{legalName},
+			#{mobile},
+			#{address},
+			#{industry}
+		)
+	</insert>
+
+	<!--新增的一个添加方未能-->
+	<insert id="saveNew" parameterType="io.renren.modules.sys.entity.SysDeptEntity" useGeneratedKeys="true">
+		insert into sys_dept
+		(
+			`deptId`,
+			`parent_id`,
+			`name`,
+			`order_num`,
+			`dept_type`
+		)
+		values
+		(
+			#{deptId},
+			#{parentId},
+			#{name},
+			#{orderNum},
+			#{deptType}
 		)
 	</insert>
 	 

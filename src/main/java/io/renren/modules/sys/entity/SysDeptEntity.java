@@ -32,6 +32,23 @@ public class SysDeptEntity implements Serializable {
 	private List<?> list;
 
 
+	//@TODO
+	private int deptType;
+
+
+	private String legalName;
+	private String mobile;
+	private String address;
+	private String industry;
+
+	public int getDeptType() {
+		return deptType;
+	}
+
+	public void setDeptType(int deptType) {
+		this.deptType = deptType;
+	}
+
 	public void setDeptId(Long deptId) {
 		this.deptId = deptId;
 	}
@@ -98,5 +115,38 @@ public class SysDeptEntity implements Serializable {
 
 	public void setList(List<?> list) {
 		this.list = list;
+	}
+
+	public String getLegalName() {
+		return legalName;
+	}
+
+	public void setLegalName(String legalName) {
+		this.legalName = legalName;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public String getIndustry() {
+		return industry;
+	}
+
+	public void setIndustry(String industry) {
+		this.industry = industry;
 	}
 }

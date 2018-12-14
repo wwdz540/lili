@@ -20,8 +20,37 @@ public class MerchInfoEntity {
     private String merchnoSub;
     private Date createTime;
     private Date updateTime;
-    private Long userId;
+
+    //@Todo 多余代码，日后删除
     private String username;
+    private Long userId;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    /***
+     * 让商户与部门进行绑定,实现树形结构
+     */
+    private long deptId;
+
+    private String deptName;
+
+
+    //    private Long userId;
+//    private String username;
 
     public Integer getId() {
         return id;
@@ -140,19 +169,40 @@ public class MerchInfoEntity {
         return this;
     }
 
-    public Long getUserId() {
-        return userId;
+
+    public long getDeptId() {
+        return deptId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public MerchInfoEntity setDeptId(long deptId) {
+        this.deptId = deptId;
+        return this;
     }
 
-    public String getUsername() {
-        return username;
+    public String getDeptName() {
+        return deptName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public MerchInfoEntity  setDeptName(String deptName) {
+        this.deptName = deptName;
+        return this;
     }
+
+
+    //
+//    public Long getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(Long userId) {
+//        this.userId = userId;
+//    }
+//
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 }

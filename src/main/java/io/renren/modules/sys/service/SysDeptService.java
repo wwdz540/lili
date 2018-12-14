@@ -19,6 +19,8 @@ public interface SysDeptService {
 	List<SysDeptEntity> queryList(Map<String, Object> map);
 
 	void save(SysDeptEntity sysDept);
+
+	void saveNew(SysDeptEntity sysDeptEntity);
 	
 	void update(SysDeptEntity sysDept);
 	
@@ -34,5 +36,7 @@ public interface SysDeptService {
 	 * 获取子部门ID(包含本部门ID)，用于数据过滤
 	 */
 	String getSubDeptIdList(Long deptId);
+
+
 
 }
