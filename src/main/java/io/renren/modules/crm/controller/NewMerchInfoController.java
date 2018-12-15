@@ -6,16 +6,14 @@ import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
 
+import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
 import io.renren.modules.crm.service.NewMerchInfoService;
 import io.renren.modules.sys.entity.SysUserEntity;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -54,6 +52,12 @@ public class NewMerchInfoController {
         return R.ok();
     }
 
+
+    @RequestMapping("/info/{merchId}")
+    public R info(@PathVariable("merchId") int merchId){
+        NewMerchInfoEntity data = service.findOne(merchId);
+        return R.ok().put("data", data);
+    }
 
     public SysUserEntity getUser(){
         SysUserEntity userEntity =  (SysUserEntity) SecurityUtils.getSubject().getPrincipal();

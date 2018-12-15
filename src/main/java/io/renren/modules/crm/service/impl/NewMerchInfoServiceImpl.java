@@ -3,8 +3,10 @@ package io.renren.modules.crm.service.impl;
 import io.renren.modules.crm.dao.NewMerchInfoDao;
 import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
+import io.renren.modules.crm.entity.RateConfig;
 import io.renren.modules.crm.service.MerchInfoService;
 import io.renren.modules.crm.service.NewMerchInfoService;
+import io.renren.modules.crm.service.RateConfigService;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import org.apache.commons.lang.StringUtils;
@@ -27,6 +29,9 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
     @Autowired
     private NewMerchInfoDao newMerchInfoDao;
 
+    @Autowired
+    private RateConfigService rateConfigService;
+
     @Override
     @Transactional
     public void save(NewMerchInfoEntity entity) {
@@ -36,14 +41,19 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
         deptService.save(dept);
 
 
+        if(entity.getRateConfigs()!=null){
+            for (RateConfig config : entity.getRateConfigs()) {
+                config.setDeptId(dept.getDeptId());
+                rateConfigService.saveOrUpdate(config);
+            }
+        }
+
        if(StringUtils.isNotBlank(merch.getMerchno())) {
            /*2.将部门id写到商户中**/
            merch.setDeptId(dept.getDeptId());
            /*3.添加商户*/
            merchInfoService.save(merch);
        }
-
-
 
 
     }
@@ -65,6 +75,19 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
         return newMerchInfoDao.queryTotal(map);
     }
 
+    @Override
+    public NewMerchInfoEntity findOne(long merchId) {
+        SysDeptEntity dept = deptService.queryObject(merchId);
+        if(dept == null)
+            return  null;
+
+
+
+
+
+
+    }
+
     private void fillParentName(List<NewMerchInfoEntity> list){
         SysDeptEntity dept;
         for (NewMerchInfoEntity entity : list) {
@@ -73,4 +96,6 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
                 entity.setParentName(dept.getName());
         }
     }
+
+
 }

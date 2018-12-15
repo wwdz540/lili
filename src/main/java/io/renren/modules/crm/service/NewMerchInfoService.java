@@ -15,4 +15,6 @@ public interface NewMerchInfoService {
     List<NewMerchInfoEntity> queryList(Map<String, Object> map);
 
     int queryTotal(Map<String, Object> map);
+
+    NewMerchInfoEntity findOne(long merchId);
 }

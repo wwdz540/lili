@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.crm.dao.RateConfigDao">
+
+
+    <insert id="save" parameterType="io.renren.modules.crm.entity.RateConfig" >
+      insert into rate_config
+      (
+      `dept_id`,
+      `pay_type`,
+      `rate`,
+      `max`,
+      `share_benefit`
+      )
+      values(#{deptId},#{payType},#{rate},#{max},#{shareBenefit});
+    </insert>
+
+    <update id="update" parameterType="io.renren.modules.crm.entity.RateConfig">
+        update rate_config
+        <set>
+            `rate` = #{rate},
+            `max` = #{max},
+            `share_benefit` = #{shareBenefit}
+        </set>
+        where `dept_id` = #{deptId} and `pay_type` = #{payType}
+    </update>
+    <select id="get" resultType="io.renren.modules.crm.entity.RateConfig">
+        SELECT * FROM rate_config   where `dept_id` = #{deptId} and `pay_type` = #{payType}
+    </select>
+</mapper>

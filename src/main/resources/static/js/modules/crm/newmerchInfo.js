@@ -60,12 +60,19 @@ $(function () {
     });
 });
 
-var mtype={1:"商铺",2:"代理商",3:"企业集团",4:"子帐户",5:"企业子帐户"};
+var mtype={1:"商铺",2:"代理商",3:"企业集团",4:"代理子帐户",5:"企业子帐户"};
 
 
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
+        defaultRate:[
+            { payType:'支付宝',rate:0.03,max:25,shareBenefit:0.02},
+            { payType:'微信',rate:0.03,max:25,shareBenefit:0.02},
+            { payType:'借记卡',rate:0.03,max:25,shareBenefit:0.02},
+            { payType:'贷记卡',rate:0.03,max:25,shareBenefit:0.02},
+            { payType:'标准',rate:0.03,max:25,shareBenefit:0.02}
+        ],
 		q:{
             keyword:null
 		},
@@ -75,7 +82,8 @@ var vm = new Vue({
 		merch:{
 			id:null,
             deptType:null,
-            parentId:1
+            parentId:1,
+			rateConfigs:this.defaultRate
 		}
 	},
     created: function () {
@@ -90,22 +98,35 @@ var vm = new Vue({
 			vm.title = "新增";
 			vm.merch.deptType = null;
 			vm.merch.parentId = 1;
+			vm.merch.rateConfigs = vm.defaultRate;
 
 		},
 		addChild:function(parentId,dtype,parentName){
-            vm.showList = false;
-            vm.title = "新增["+parentName+"]子帐户";
+
+            vm.title = "新增["+parentName+"]商铺户";
             vm.merch.parentId = parentId;
             switch(dtype){
 				case 1:
+                    vm.merch.rateConfigs = vm.defaultRate;
 					break;
 				case 2:
-					vm.merch.deptType = 5;
+                    vm.merch.rateConfigs = vm.defaultRate;
+					vm.merch.deptType = 4;
+					break;
 				case 3:
-					vm.merch.deptType = 6;
+					console.log("case 3 case 3")
+					vm.merch.deptType = 5;
+                    vm.merch.rateConfigs = null;
+                    break;
 				default:
+                    vm.merch.rateConfigs = vm.defaultRate;
 					vm.merch.deptType = null;
+					break;
             }
+            vm.showList = false;
+            console.log(dtype)
+			console.log(vm.merch.deptType)
+			console.log(vm.merch.rateConfigs)
         },
 		update: function () {
             var merchId = getSelectedRow();

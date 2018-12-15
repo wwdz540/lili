@@ -2,6 +2,7 @@ package io.renren;
 
 import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.service.MerchInfoService;
+import io.renren.modules.sys.dao.SysUserDao;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
@@ -27,6 +28,9 @@ public class UpdateSqlTest {
 
     @Autowired
     MerchInfoService merchInfoService;
+
+    @Autowired
+    SysUserDao userDao;
 
 
     @Test
@@ -60,6 +64,8 @@ public class UpdateSqlTest {
            dept.setIndustry("");
            dept.setLegalName("");
            sysDeptService.save(dept);
+           entity.setDeptId(dept.getDeptId());
+           userDao.update(entity);
 
            update(dept.getDeptId(),4,entity);
 
@@ -86,6 +92,7 @@ public class UpdateSqlTest {
             sysDeptService.save(dept);
             merch.setDeptId(dept.getDeptId());
             merchInfoService.update(merch);
+
         }
     }
 }

@@ -1,16 +1,18 @@
 package io.renren.modules.crm.entity;
 
+import io.renren.modules.crm.service.RateConfigService;
 import io.renren.modules.sys.entity.SysDeptEntity;
 
 import java.beans.Transient;
 import java.util.Date;
+import java.util.List;
 
 /***
  * 只作为pojo类使用
  */
 public class NewMerchInfoEntity {
 
-    private Integer id;
+    private Long id;
     private String merchno;
     private String name;
     private int merchType;
@@ -43,10 +45,13 @@ public class NewMerchInfoEntity {
     //@TODO
     private int deptType;
 
+    private List<RateConfig> rateConfigs;
+
     @Transient
     public MerchInfoEntity getMerchInfo(){
         MerchInfoEntity entity = new MerchInfoEntity();
-        entity.setId(this.id);
+        if(this.id!=null)
+            entity.setId((int)this.id.longValue());
         entity.setMerchno(this.merchno);
         entity.setMerchName(this.name);
         entity.setMerchType(this.merchType);
@@ -82,11 +87,11 @@ public class NewMerchInfoEntity {
         return deptEntity;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -224,5 +229,13 @@ public class NewMerchInfoEntity {
 
     public void setDeptType(int deptType) {
         this.deptType = deptType;
+    }
+
+    public List<RateConfig> getRateConfigs() {
+        return rateConfigs;
+    }
+
+    public void setRateConfigs(List<RateConfig> rateConfigs) {
+        this.rateConfigs = rateConfigs;
     }
 }
