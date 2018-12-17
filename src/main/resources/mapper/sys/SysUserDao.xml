@@ -13,9 +13,9 @@
 				and u.`username` like concat('%',#{username},'%')
 			</if>
 
-			<if test="leader != null">
-				and u.`leader`  = #{leader}
-			</if>
+			<!--<if test="leader != null">-->
+				<!--and u.`leader`  = #{leader}-->
+			<!--</if>-->
 
 			<!--  数据过滤  -->
 			${filterSql}
@@ -39,9 +39,9 @@
 			<if test="username != null and username.trim() != ''">
 				and u.`username` like concat('%',#{username},'%')
 			</if>
-			<if test="leader != null">
-				and u.`leader`  = #{leader}
-			</if>
+			<!--<if test="leader != null">-->
+				<!--and u.`leader`  = #{leader}-->
+			<!--</if>-->
 
 			<!--  数据过滤  -->
 			${filterSql}

@@ -27,4 +27,8 @@
     <select id="get" resultType="io.renren.modules.crm.entity.RateConfig">
         SELECT * FROM rate_config   where `dept_id` = #{deptId} and `pay_type` = #{payType}
     </select>
+
+    <select id="findByDept" resultType="io.renren.modules.crm.entity.RateConfig">
+         SELECT * FROM rate_config   where `dept_id` = #{deptId}
+    </select>
 </mapper>

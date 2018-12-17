@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 public class RateConfigServiceImpl implements RateConfigService {
 
@@ -22,5 +24,10 @@ public class RateConfigServiceImpl implements RateConfigService {
         }else {
             rateConfigDao.update(rateConfig);
         }
+    }
+
+    @Override
+    public List<RateConfig> findByDept(Long id) {
+        return rateConfigDao.findByDept(id);
     }
 }

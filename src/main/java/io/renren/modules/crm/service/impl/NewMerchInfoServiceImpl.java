@@ -1,5 +1,6 @@
 package io.renren.modules.crm.service.impl;
 
+import io.renren.common.exception.RRException;
 import io.renren.modules.crm.dao.NewMerchInfoDao;
 import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +62,11 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
 
     @Override
     public void update(NewMerchInfoEntity merchInfoEntity) {
-
+        merchInfoService.update(merchInfoEntity.getMerchInfo());
+        deptService.update(merchInfoEntity.getDept());
+        for (RateConfig rateConfig : merchInfoEntity.getRateConfigs()) {
+            rateConfigService.saveOrUpdate(rateConfig);
+        }
     }
 
     @Override
@@ -77,15 +83,32 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
 
     @Override
     public NewMerchInfoEntity findOne(long merchId) {
-        SysDeptEntity dept = deptService.queryObject(merchId);
-        if(dept == null)
-            return  null;
+        NewMerchInfoEntity newMerchInfoEntity = newMerchInfoDao.get(merchId);
+        if(newMerchInfoEntity!=null){
+            List<RateConfig> list = rateConfigService.findByDept(newMerchInfoEntity.getId());
+            newMerchInfoEntity.setRateConfigs(list);
+        }
+        return newMerchInfoEntity;
 
+    }
 
+    @Override
+    @Transactional
+    public void deleteBatch(Integer[] merchIds) {
 
-
-
-
+        //查看合法性
+        for (Integer merchId : merchIds) {
+            Long id =  merchId.longValue();
+            Map<String,Object> paras = new HashMap<>();
+            paras.put("parentId",id);
+            int count = newMerchInfoDao.queryTotal(paras);
+            if(count>0){
+                throw new RRException("不可删除，当前商铺存在子商铺!");
+            }
+        }
+        for (Integer merchId : merchIds) {
+            deptService.delete(merchId.longValue());
+        }
     }
 
     private void fillParentName(List<NewMerchInfoEntity> list){

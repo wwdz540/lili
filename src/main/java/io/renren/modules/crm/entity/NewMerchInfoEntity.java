@@ -2,6 +2,7 @@ package io.renren.modules.crm.entity;
 
 import io.renren.modules.crm.service.RateConfigService;
 import io.renren.modules.sys.entity.SysDeptEntity;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.beans.Transient;
 import java.util.Date;
@@ -13,8 +14,12 @@ import java.util.List;
 public class NewMerchInfoEntity {
 
     private Long id;
+    private Long merchId;
     private String merchno;
+
+    @NotEmpty(message="商铺名不能为空")
     private String name;
+
     private int merchType;
     private String legalName;
     private String mobile;
@@ -24,9 +29,9 @@ public class NewMerchInfoEntity {
     private String industry;
     private String merchnoSub;
 
-
-    //部门ID
-    private Long deptId;
+//
+//    //部门ID
+//    private Long deptId;
 
     //上级部门ID，一级部门为0
     private Long parentId;
@@ -50,8 +55,8 @@ public class NewMerchInfoEntity {
     @Transient
     public MerchInfoEntity getMerchInfo(){
         MerchInfoEntity entity = new MerchInfoEntity();
-        if(this.id!=null)
-            entity.setId((int)this.id.longValue());
+        if(this.merchId!=null)
+            entity.setId((int)this.merchId.longValue());
         entity.setMerchno(this.merchno);
         entity.setMerchName(this.name);
         entity.setMerchType(this.merchType);
@@ -63,9 +68,8 @@ public class NewMerchInfoEntity {
         entity.setIndustry(this.industry);
         entity.setMerchnoSub(this.merchnoSub);
         entity.setCreateTime(this.createTime);
-
-       if(this.deptId != null)
-            entity.setDeptId(this.deptId);
+        if(this.id!=null)
+            entity.setDeptId(this.id);
 
         return entity;
     }
@@ -73,7 +77,7 @@ public class NewMerchInfoEntity {
     @Transient
     public SysDeptEntity getDept(){
         SysDeptEntity deptEntity = new SysDeptEntity();
-        deptEntity.setDeptId(this.deptId);
+        deptEntity.setDeptId(this.id);
         deptEntity.setDeptType(this.deptType);
         deptEntity.setName(this.name);
         deptEntity.setParentId(this.parentId);
@@ -175,14 +179,6 @@ public class NewMerchInfoEntity {
         this.merchnoSub = merchnoSub;
     }
 
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
     public Long getParentId() {
         return parentId;
     }
@@ -237,5 +233,13 @@ public class NewMerchInfoEntity {
 
     public void setRateConfigs(List<RateConfig> rateConfigs) {
         this.rateConfigs = rateConfigs;
+    }
+
+    public Long getMerchId() {
+        return merchId;
+    }
+
+    public void setMerchId(Long merchId) {
+        this.merchId = merchId;
     }
 }

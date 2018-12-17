@@ -26,14 +26,25 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
+
 	<div v-show="showList">
 		<div class="grid-btn">
+			<div class="form-group col-xs-2">
+
+			<select v-model="q.deptType" class="form-control">
+				<option value="0">全部</option>
+				<option value="1">商户</option>
+				<option value="2">代理商</option>
+				<option value="3">集团公司</option>
+			</select>
+			</div>
 			<div class="form-group col-sm-2">
-				<input type="text" class="form-control" v-model="q.keyword" @keyup.enter="query" placeholder="商户名称/商户编号">
+				<input type="text" class="form-control" v-model="q.keyword" @keyup.enter="query" placeholder="商户名称/商户编号/用户名">
 			</div>
 			<a class="btn btn-default" @click="query">查询</a>
-			<a v-if="hasPermission('sys:role:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增商户</a>
-
+			<a v-if="hasPermission('merch:all')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增商户</a>
+			<a v-if="hasPermission('merch:all')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('merch:all')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 
 		</div>
 	    <table id="jqGrid"></table>
@@ -43,7 +54,7 @@
     <div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
-			<template v-if="merch.parentId == 1 ">
+			<template v-if="merch.parentId == 1 &&  merch.id == null">
 			<div class="form-group">
 				<div class="col-sm-2 control-label">类别</div>
 				<div class="col-sm-10">
@@ -114,7 +125,7 @@
 				</div>
 			</div>
 
-			<template v-if="merch.rateConfigs">
+			<template v-if="merch.rateConfigs && merch.deptType != 5">
 
 			<div class="form-group">
 				<div class="col-sm-2 control-label">费率设制</div>
@@ -136,13 +147,12 @@
 								<td> <input type="text"  v-model="rc.rate"/></td>
 								<td> <input type="text"  v-model="rc.max"/></td>
 								<td> <input type="text"  v-model="rc.shareBenefit"/></td>
-
 							</tr>
 						</template>
 
 						</tbody>
 
-						{{merch.rateConfigs[1].rate}}
+
 					</table>
 				</div>
 			</div>

@@ -24,12 +24,14 @@ $(function () {
 							break;
 						case 2:
 						case 3:
-                            opStr = "<a href='###' onclick='vm.addChild("+merch.id+","+merch.deptType+" ,\""+merch.name+"\")'> 添加子商铺</a>";
+                            opStr = "<a title='添加商铺' href='###' class='fa fa-plus' onclick='vm.addChild("+merch.id+","+merch.deptType+" ,\""+merch.name+"\")'> </a>";
+                            opStr += "&nbsp;&nbsp;&nbsp;<a title='查看子商铺' href='####' class='glyphicon glyphicon-zoom-in' onclick='vm.queryChild("+merch.id+")' ></a>";
                             break;
 						default:
 							break;
 
 					}
+
 					return opStr;
                 }}
         ],
@@ -74,7 +76,9 @@ var vm = new Vue({
             { payType:'标准',rate:0.03,max:25,shareBenefit:0.02}
         ],
 		q:{
-            keyword:null
+            keyword:'',
+			deptType:0,
+			parentId:0
 		},
 		showList: true,
 		title:null,
@@ -82,7 +86,7 @@ var vm = new Vue({
 		merch:{
 			id:null,
             deptType:null,
-            parentId:1,
+            parentId:0,
 			rateConfigs:this.defaultRate
 		}
 	},
@@ -91,13 +95,19 @@ var vm = new Vue({
     },
 	methods: {
 		query: function () {
+			vm.q.parentId=0;
 			vm.reload();
+		},
+        queryChild:function(parentId){
+			vm.q.deptType=0;
+			vm.q.keyword="";
+			vm.q.parentId = parentId;
+            vm.reload();
 		},
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.merch.deptType = null;
-			vm.merch.parentId = 1;
+			vm.reInit();
 			vm.merch.rateConfigs = vm.defaultRate;
 
 		},
@@ -130,7 +140,7 @@ var vm = new Vue({
         },
 		update: function () {
             var merchId = getSelectedRow();
-            $.get(baseURL + "crm/merchInfo/info/"+merchId, function(r){
+            $.get(baseURL + "crm/newmerchInfo/info/"+merchId, function(r){
                 vm.merch = r.data;
                 vm.showList = false;
                 vm.title = "修改";
@@ -145,7 +155,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "crm/merchInfo/delete",
+				    url: baseURL + "crm/newmerchInfo/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(merchIds),
 				    success: function(r){
@@ -188,9 +198,23 @@ var vm = new Vue({
 	    	vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
-                postData:{'merchName': vm.q.merchName,'merchno': vm.q.merchno},
+                postData:vm.q,
                 page:page
             }).trigger("reloadGrid");
-		}
+		},
+		reInit: function () {
+			vm.merch.id = null;
+			vm.merch.parentId=1;
+			vm.merch.deptType =null;
+            vm.merch.rateConfigs = vm.defaultRate;
+            vm.merch.name='';
+            vm.merch.legalName='';
+            vm.merch.merchno='';
+            vm.merch.merchnoSub='';
+            vm.merch.mobile='';
+            vm.merch.address='';
+            vm.merch.status='';
+            vm.merch.industry='';
+        }
 	}
 });

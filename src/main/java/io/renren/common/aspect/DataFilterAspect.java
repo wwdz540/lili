@@ -14,7 +14,10 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.reflect.annotation.ExceptionProxy;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -41,7 +44,8 @@ public class DataFilterAspect {
             SysUserEntity user = ShiroUtils.getUserEntity();
 
             //如果不是超级管理员，则只能查询本部门及子部门数据
-            if(user.getUserId() != Constant.SUPER_ADMIN){
+           // if(user.getUserId() != Constant.SUPER_ADMIN){
+            if(user.getDeptId()!=1){
                 Map map = (Map)params;
                 map.put("filterSql", getFilterSQL(user, point));
             }
@@ -57,25 +61,42 @@ public class DataFilterAspect {
      */
     private String getFilterSQL(SysUserEntity user, JoinPoint point){
         MethodSignature signature = (MethodSignature) point.getSignature();
-        DataFilter dataFilter = signature.getMethod().getAnnotation(DataFilter.class);
+
+        Method method=((MethodSignature)point.getSignature()).getMethod();
+        Method realMethod;
+        try {
+             realMethod = point.getTarget().getClass().getDeclaredMethod(signature.getName(),
+                    method.getParameterTypes());
+        }catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        DataFilter dataFilter = realMethod.getAnnotation(DataFilter.class);
+
         //获取表的别名
         String tableAlias = dataFilter.tableAlias();
         if(StringUtils.isNotBlank(tableAlias)){
             tableAlias +=  ".";
         }
 
+
         //获取子部门ID
-        String subDeptIds = sysDeptService.getSubDeptIdList(user.getDeptId());
-
+        //String subDeptIds = sysDeptService.getSubDeptIdList(user.getDeptId());
         StringBuilder filterSql = new StringBuilder();
-        filterSql.append("and (");
-        filterSql.append(tableAlias).append("dept_id in(").append(subDeptIds).append(")");
+        filterSql.append(tableAlias).append("dept_id = " + user.getDeptId()+" ")
+                .append(" or ")
+                .append(tableAlias).append("dept_Id in (select dept_id from sys_dept where parent_Id ="+user.getDeptId()+")");
 
-        //没有本部门数据权限，也能查询本人数据
-        if(dataFilter.user()){
-            filterSql.append(" or ").append(tableAlias).append("user_id=").append(user.getUserId());
-        }
-        filterSql.append(")");
+
+//        StringBuilder filterSql = new StringBuilder();
+//        filterSql.append("and (");
+//        filterSql.append(tableAlias).append("dept_id in(").append(subDeptIds).append(")");
+//
+//        //没有本部门数据权限，也能查询本人数据
+//        if(dataFilter.user()){
+//            filterSql.append(" or ").append(tableAlias).append("user_id=").append(user.getUserId());
+//        }
+//        filterSql.append(")");
 
         return filterSql.toString();
     }

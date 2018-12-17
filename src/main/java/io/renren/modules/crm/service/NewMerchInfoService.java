@@ -17,4 +17,6 @@ public interface NewMerchInfoService {
     int queryTotal(Map<String, Object> map);
 
     NewMerchInfoEntity findOne(long merchId);
+
+    void deleteBatch(Integer[] merchIds);
 }

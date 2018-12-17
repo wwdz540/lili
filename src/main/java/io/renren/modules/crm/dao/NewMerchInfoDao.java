@@ -10,4 +10,5 @@ import java.util.Map;
 public interface NewMerchInfoDao {
     List<NewMerchInfoEntity> queryList(Map<String,Object> map);
     int queryTotal(Map<String,Object> map);
+    NewMerchInfoEntity get(long deptId);
 }

@@ -6,17 +6,38 @@
         select count(*)
         from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id
         where dept.del_flag=0
-        <if test="parentId !=null">
+        <if test="parentId != null and parentId != 0 ">
            and dept.parent_id =#{parentId}
+        </if>
+        <if test="deptType != null and deptType != 0">
+            and dept.dept_type = #{deptType}
+        </if>
+
+        <if test="keyword != null and keyword != '' ">
+            and (
+            merch.merchno =#{keyword}
+            or dept.name like concat('%',#{keyword},'%')
+            or dept.legal_name like concat('%',#{keyword},'%'))
         </if>
     </select>
 
     <select id="queryList" resultType="io.renren.modules.crm.entity.NewMerchInfoEntity">
-        select dept.dept_id as Id,dept.*,merch.merchno,merchno_sub
+        select dept.dept_id as Id,dept.*,merch.id as merch_id,merch.merchno,merchno_sub
             from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id
             where dept.del_flag=0
-        <if test="parentId !=null">
-            and dept.parent_id =#{parentId}
+
+        <if test="parentId != null and parentId != 0 ">
+            and dept.parent_id = #{parentId}
+        </if>
+        <if test="deptType != null and deptType != 0">
+            and dept.dept_type = #{deptType}
+        </if>
+
+        <if test="keyword != null and keyword != '' ">
+            and (
+            merch.merchno =#{keyword}
+            or dept.name like concat('%',#{keyword},'%')
+            or dept.legal_name like concat('%',#{keyword},'%'))
         </if>
 
           order by dept.dept_id  desc
@@ -25,5 +46,11 @@
             limit #{offset}, #{limit}
         </if>
 
+    </select>
+
+    <select id="get" resultType="io.renren.modules.crm.entity.NewMerchInfoEntity">
+          select dept.dept_id as Id,dept.*,merch.id as merch_id,merch.merchno,merchno_sub
+            from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id
+            where dept.dept_id=#{deptId}
     </select>
 </mapper>

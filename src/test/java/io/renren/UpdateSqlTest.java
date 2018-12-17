@@ -48,7 +48,7 @@ public class UpdateSqlTest {
 
        for(SysUserEntity entity : list){
            if(entity.getUserId() == 1){ //表示admin 底下所有商铺都为直隶商铺
-               update(0l,1,entity);
+               update(1l,1,entity);
                continue;
            }
 
