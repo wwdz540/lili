@@ -31,16 +31,19 @@ public class SysDeptServiceImpl implements SysDeptService {
 	
 	@Override
 	public void save(SysDeptEntity sysDept){
+
 		sysDeptDao.save(sysDept);
 	}
 
 	@Override
 	public void saveNew(SysDeptEntity deptEntity) {
+
 		sysDeptDao.save(deptEntity);
 	}
 
 	@Override
 	public void update(SysDeptEntity sysDept){
+
 		sysDeptDao.update(sysDept);
 	}
 	

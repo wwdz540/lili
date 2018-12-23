@@ -1,4 +1,6 @@
+var mavg = 0 ;
 $(function () {
+
     $("#jqGrid").jqGrid({
         url: baseURL + 'crm/transData/list',
         datatype: "json",
@@ -16,7 +18,9 @@ $(function () {
             { label: '卡号末4位', name: 'shortPan', width: 30 },
             { label: '交易状态', name: 'respCode', width: 40 },
             { label: '发卡机构', name: 'issuerCode', width: 30 },
-			{ label: '卡类型', name: 'cardType', width: 30}
+            { label: '卡类型', name: 'cardType', width: 30},
+            { label: '客单价', name: 'cardType', width: 30,formatter:fmtFun}
+
         ],
 		viewrecords: true,
         height: 385,
@@ -55,9 +59,37 @@ $(function () {
                     // vm.sharePoint = r.sharePoint;
                 }
             });
+        },
+        loadComplete: function (data){
+
+            if(data.avg) {
+              //  mavg = data.avg;
+                $(".avgc").html(data.avg);
+            }
         }
     });
+    vm.getDept();
 });
+
+var  fmtFun= function (a,b,c) {
+    return "<span class='avgc'></span>";
+}
+
+
+var setting = {
+    data: {
+        simpleData: {
+            enable: true,
+            idKey: "deptId",
+            pIdKey: "parentId",
+            rootPId: -1
+        },
+        key: {
+            url:"nourl"
+        }
+    }
+};
+var ztree;
 
 
 var vm = new Vue({
@@ -68,16 +100,21 @@ var vm = new Vue({
             leaderName:"",
             dateStart:"",
             dateEnd:"",
-            dateRange:""
+            dateRange:"",
+            deptId:0,
+            issuerCode:""
 		},
         amount:0,
         sharePoint:0,
         showList:true,
 		transData:{
 			id:null
-		}
+		},
+        queryDeptName:""
 	},
 	methods: {
+
+
 		query: function () {
 			vm.reload();
 		},
@@ -87,11 +124,14 @@ var vm = new Vue({
 				vm.showList = false;
     		});
 		},
+        excel: function(){
+		    window.location.href=baseURL + "crm/transData/excel?token="+token+"&dateStart="+vm.q.dateStart+"&dateEnd="+vm.q.dateEnd;
+        },
 	    reload: function () {
 	    	vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
-                postData:{'merchName': vm.q.merchName,'leaderName': vm.q.leaderName,'dateStart': vm.q.dateStart,'dateEnd': vm.q.dateEnd},
+                postData:vm.q,
                 page:page
             }).trigger("reloadGrid");
 		},
@@ -113,8 +153,8 @@ var vm = new Vue({
             $('#daterange-btn').daterangepicker({
                 'locale': locale,
                 ranges: {
-                    '今日': [moment(), moment()],
-                    '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    // '今日': [moment(), moment()],
+                    '昨日至天': [moment().subtract(1, 'days'), moment()],
                     '最近7日': [moment().subtract(6, 'days'), moment()],
                     '最近30日': [moment().subtract(29, 'days'), moment()],
                     '本月': [moment().startOf('month'), moment().endOf('month')],
@@ -127,6 +167,60 @@ var vm = new Vue({
             function (start, end) {
                 vm.q.dateStart = start.format('YYYY-MM-DD');
                 vm.q.dateEnd = end.format('YYYY-MM-DD');
+            });
+        },
+
+        getDept: function(){
+            //加载部门树
+            $.get(baseURL + "sys/dept/list", function(r){
+                ztree = $.fn.zTree.init($("#deptTree"), setting, r);
+                var node = ztree.getNodeByParam("deptId", userInfo.deptId);
+                if(node != null){
+                    ztree.selectNode(node);
+
+                    vm.queryDeptName = node.name;
+                }
+            })
+        },
+
+        deptTree: function(){
+
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "选择部门",
+                area: ['300px', '450px'],
+                shade: 0,
+                shadeClose: false,
+                content: jQuery("#deptLayer"),
+                btn: ['确定', '取消'],
+                btn1: function (index) {
+                    var node = ztree.getSelectedNodes();
+
+
+                    if(node[0].deptId == 1)
+                    {
+                        vm.q.deptId = 0;
+                        vm.q.parentId = 0;
+                    }
+                    else if(node[0].deptType == 2 || node[0].deptType == 3 ){
+                        vm.q.deptId = 0;
+                        vm.q.parentId = node[0].deptId;
+                    }else{
+
+                        vm.q.deptId = node[0].deptId;
+                        vm.q.parentId = 0;
+                    }
+
+
+                    //选择上级部门
+                    // vm.user.deptId = node[0].deptId;
+                    // vm.user.deptName = node[0].name;
+                    vm.queryDeptName =  node[0].name;
+
+                    layer.close(index);
+                }
             });
         }
 	},

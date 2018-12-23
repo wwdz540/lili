@@ -40,7 +40,10 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
         SysDeptEntity dept = entity.getDept();
         MerchInfoEntity merch = entity.getMerchInfo();
         /*1.添加部门**/
+
         deptService.save(dept);
+        fillPath(dept);
+        deptService.update(dept);
 
 
         if(entity.getRateConfigs()!=null){
@@ -62,8 +65,16 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
 
     @Override
     public void update(NewMerchInfoEntity merchInfoEntity) {
+
         merchInfoService.update(merchInfoEntity.getMerchInfo());
-        deptService.update(merchInfoEntity.getDept());
+
+        SysDeptEntity dept = merchInfoEntity.getDept();
+        fillPath(dept);
+
+        System.out.println("================");
+        System.out.println(dept.getPath());
+
+        deptService.update(dept);
         for (RateConfig rateConfig : merchInfoEntity.getRateConfigs()) {
             rateConfigService.saveOrUpdate(rateConfig);
         }
@@ -114,10 +125,33 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
     private void fillParentName(List<NewMerchInfoEntity> list){
         SysDeptEntity dept;
         for (NewMerchInfoEntity entity : list) {
+            //@TODO 临时path解决方案
+
+            String preString ="";
+
+           int c= entity.getPath() ==null ?  0 : entity.getPath().split("-").length;
+           for(int i=0;i<c;i++)
+            {
+                preString += "├";
+            }
+
+            entity.setName(preString + entity.getName());
+
              dept = deptService.queryObject(entity.getParentId());
              if(dept!=null)
                 entity.setParentName(dept.getName());
         }
+    }
+
+    private void fillPath(SysDeptEntity merchInfoEntity){
+        SysDeptEntity parent = deptService.queryObject(merchInfoEntity.getParentId());
+
+
+        String path = parent.getPath() +"-"+ StringUtils.leftPad(
+                merchInfoEntity.getDeptId()+"",10,'0');
+
+
+        merchInfoEntity.setPath(path);
     }
 
 

@@ -1,0 +1,70 @@
+http://139.199.23.179:8081/lilishuju/index.html#modules/crm/merchinfo.html
+
+
+
+代码文件有：1.后台管理代码   2.微信公众号代码  3.pos收银APP代码
+
+
+
+
+
+腾讯云：用户名 lilishuju@126.com 密码  lili1234.
+
+操作系统最高权限 root/lili1234.
+
+服务器设置的密码全为：lili1234.   (后面有点)
+
+两台服务器都在腾讯云：
+
+
+
+
+
+
+上海的服务器是微信公众号
+
+北京的服务器是后台管理的
+
+
+
+
+
+微信公众号的服务器原有VNC Viewer可视化界面
+
+Vnc server: 111.231.58.245:5902
+
+Password: lili1234.
+
+
+
+
+mysql数据库：（在公众号服务器上搭建的mysql数据库）
+
+地址：111.231.58.245
+
+端口：3306
+
+username：lilidbuser
+
+password：lili1234.
+
+
+
+数据库：liliqianbao_db
+
+
+
+关键业务表说明：
+
+fy_trans_data：富友交易数据
+
+merch_info：商户信息表
+
+trans_data：盛付通交易数据
+
+user_agent：商户绑定微信关联表
+
+
+47.105.192.102
+
+盛付通，富有

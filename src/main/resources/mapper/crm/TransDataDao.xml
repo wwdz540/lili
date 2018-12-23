@@ -11,6 +11,7 @@
 	<select id="queryList" resultType="io.renren.modules.crm.entity.TransDataEntity">
 		select t.*, m.merch_name AS merchName from trans_data t
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
 		WHERE
 		m.enabled = 1
 		<if test="merchName != null and merchName.trim() != ''">
@@ -34,6 +35,16 @@
 		<if test="merchno !=null">
 			and t.merchantId = #{merchno}
 		</if>
+		<if test="deptId != null and  deptId !=0 ">
+			and dept.dept_id = #{deptId}
+		</if>
+		<if test="parentId != nlll and parentId !=0 and parentId != 1">
+			and dept.parent_id = #{parentId}
+		</if>
+		<if test="issuerCode != null and issuerCode !='' ">
+			and t.issuerCode = #{issuerCode}
+		</if>
+
 		order by t.id asc
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
@@ -43,6 +54,7 @@
 	<select id="queryTotal" resultType="int">
 		select COUNT(t.id) from trans_data t
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
 		WHERE  m.enabled = 1
 		<if test="merchName != null and merchName.trim() != ''">
 			and m.merch_name like concat('%',#{merchName},'%')
@@ -61,6 +73,16 @@
 		</if>
 		<if test="merchno !=null">
 			and t.merchantId = #{merchno}
+		</if>
+		<if test="deptId != null and  deptId !=0 ">
+			and dept.dept_id = #{deptId}
+		</if>
+		<if test="parentId != nlll and parentId !=0 and parentId != 1">
+			and dept.parent_id = #{parentId}
+		</if>
+
+		<if test="issuerCode != null and issuerCode !='' ">
+			and t.issuerCode = #{issuerCode}
 		</if>
 	</select>
 
@@ -98,6 +120,41 @@
 			and t.txn_dateTime &lt;= #{dateEnd}
 		</if>
 		GROUP BY t.cardType
+	</select>
+
+	<select id="queryAvg" resultType="int">
+		select avg(t.amt) from trans_data t
+		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
+		WHERE  m.enabled = 1
+		<if test="merchName != null and merchName.trim() != ''">
+			and m.merch_name like concat('%',#{merchName},'%')
+		</if>
+		<if test="userIdList != null and userIdList.size() > 0">
+			and m.user_id  IN
+			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
+		</if>
+		<if test="dateStart != null">
+			and t.txn_dateTime &gt;= #{dateStart}
+		</if>
+		<if test="dateEnd != null">
+			and t.txn_dateTime &lt;= #{dateEnd}
+		</if>
+		<if test="merchno !=null">
+			and t.merchantId = #{merchno}
+		</if>
+		<if test="deptId != null and  deptId !=0 ">
+			and dept.dept_id = #{deptId}
+		</if>
+		<if test="parentId != nlll and parentId !=0 and parentId != 1">
+			and dept.parent_id = #{parentId}
+		</if>
+
+		<if test="issuerCode != null and issuerCode !='' ">
+			and t.issuerCode = #{issuerCode}
+		</if>
 	</select>
 
 </mapper>

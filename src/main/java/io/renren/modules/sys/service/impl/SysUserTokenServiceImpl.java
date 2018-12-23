@@ -49,6 +49,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 		//判断是否生成过token
 		SysUserTokenEntity tokenEntity = queryByUserId(userId);
 
+
 		if(tokenEntity == null){
 			tokenEntity = new SysUserTokenEntity();
 			tokenEntity.setUserId(userId);
@@ -59,11 +60,13 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 
 			//保存token
 			save(tokenEntity);
+		}else if(tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()){
+			tokenEntity.setToken(TokenGenerator.generateValue());
+			tokenEntity.setUpdateTime(now);
+			tokenEntity.setExpireTime(expireTime);
+			update(tokenEntity);
 		}
-
-
 		R r = R.ok().put("token", tokenEntity.getToken()).put("expire", EXPIRE);
-
 		return r;
 	}
 }

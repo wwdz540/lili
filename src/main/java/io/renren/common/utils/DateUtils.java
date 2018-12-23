@@ -1,5 +1,8 @@
 package io.renren.common.utils;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,10 +88,35 @@ public class DateUtils {
         return date;
     }
 
+    public static void fixQueryDate(Map params){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        String todayString = df.format(calendar.getTime());
 
+        calendar.add(Calendar.DATE,-1);
+        String yestodayString = df.format(calendar.getTime());
+
+
+        Object start = params.get("dateStart");
+        Object end = params.get("dateEnd");
+
+        if(start == null ||StringUtils.isBlank(start.toString())){
+            params.put("dateStart",yestodayString+" 12:00:00");
+            params.put("dateEnd",todayString+" 12:00:00");
+        }else if (StringUtils.trim(end.toString()).equals(todayString)) { //如果是今天的话
+            params.put("dateStart",start+" 12:00:00");
+            DateFormat sf = new SimpleDateFormat("HH:mm:ss");
+            params.put("dateEnd",end+" "+ sf.format(new Date()));
+        }else{
+            params.put("dateStart",start+" 12:00:00");
+            params.put("dateEnd",end+" 12:00:00");
+        }
+    }
+
+/*
     public static void main(String[] args){
 
         System.out.println(getNextDay(new Date()));
 
-    }
+    }*/
 }

@@ -1,5 +1,7 @@
 package io.renren.modules.sys.entity;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,6 +30,9 @@ public class SysDeptEntity implements Serializable {
 	 * ztree属性
 	 */
 	private Boolean open;
+
+
+	private String path;
 
 	private List<?> list;
 
@@ -149,4 +154,14 @@ public class SysDeptEntity implements Serializable {
 	public void setIndustry(String industry) {
 		this.industry = industry;
 	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+
 }

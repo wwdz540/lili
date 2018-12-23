@@ -109,6 +109,7 @@ public class SysUserServiceImpl implements SysUserService {
 
 
 	@Override
+	@Transactional
 	public List<SysUserEntity> findAll(){
 		return sysUserDao.findAll();
 	}

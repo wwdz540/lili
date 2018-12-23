@@ -1,12 +1,15 @@
 package io.renren;
 
 import io.renren.modules.crm.entity.MerchInfoEntity;
+import io.renren.modules.crm.entity.NewMerchInfoEntity;
 import io.renren.modules.crm.service.MerchInfoService;
+import io.renren.modules.crm.service.NewMerchInfoService;
 import io.renren.modules.sys.dao.SysUserDao;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import io.renren.modules.sys.service.SysUserService;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +37,8 @@ public class UpdateSqlTest {
     @Autowired
     SysUserDao userDao;
 
+    @Autowired
+    NewMerchInfoService newMerchInfoService;
 
     @Test
     public void test2(){
@@ -95,4 +102,41 @@ public class UpdateSqlTest {
 
         }
     }
+
+    @Test
+    public void testPath(){
+
+        long[] ids = new long[]{1l,864l,886l,894l,904l};
+
+        for (long _id : ids) {
+            Map p = new HashMap();
+            p.put("parentId",_id);
+            List<NewMerchInfoEntity> list =newMerchInfoService.queryList(p);
+            list.stream().map(e->e.getId()).map(id->newMerchInfoService.findOne(id)).forEach(
+                    e->{
+                        newMerchInfoService.update(e);
+                    }
+            );
+        }
+
+
+    }
+
+//    @Test
+//    public void updatePath(){
+//     // List<SysDeptEntity> list = sysDeptService.getSubDeptIdList(1l);
+//
+//
+//
+//            deptEntity.setPath(
+//                    StringUtils.leftPad(deptEntity.getParentId().toString(),100,'0')
+//                    +"-"
+//                    +StringUtils.leftPad(deptEntity.getParentId().toString(),100,'0')
+//            );
+//
+//            sysDeptService.update(deptEntity);
+//       // }
+//    }
+
+
 }

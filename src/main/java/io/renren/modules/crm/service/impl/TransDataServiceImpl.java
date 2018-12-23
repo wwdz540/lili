@@ -175,5 +175,11 @@ public class TransDataServiceImpl implements TransDataService{
         return result;
     }
 
+    @Override
+    public int queryAvg(Map<String, Object> map) {
+        Integer avg =  transDataDao.queryAvg(map);
+        return avg == null ? 0 : avg;
+    }
+
 
 }

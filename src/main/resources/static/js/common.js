@@ -22,9 +22,13 @@ var baseURL = "/lilishuju/";
 
 //登录token
 var token = localStorage.getItem("token");
+
 if(token == 'null'){
     parent.location.href = baseURL + 'login.html';
 }
+
+var userInfo = JSON.parse(localStorage.getItem("userInfo"));
+//console.log("dept id is "+userInfo.deptId)
 
 //jquery全局配置
 $.ajaxSetup({
@@ -90,13 +94,13 @@ function getSelectedRow() {
     	alert("请选择一条记录");
     	return ;
     }
-    
+
     var selectedIDs = grid.getGridParam("selarrrow");
     if(selectedIDs.length > 1){
     	alert("只能选择一条记录");
     	return ;
     }
-    
+
     return selectedIDs[0];
 }
 
@@ -108,6 +112,6 @@ function getSelectedRows() {
     	alert("请选择一条记录");
     	return ;
     }
-    
+
     return grid.getGridParam("selarrrow");
 }

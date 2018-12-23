@@ -22,4 +22,6 @@ public interface TransDataService {
     Map<String,Object> transData();
 
     Map<String,Object> getSumData(Map<String, Object> map, SysUserEntity userEntity);
+
+    int queryAvg(Map<String, Object> map);
 }

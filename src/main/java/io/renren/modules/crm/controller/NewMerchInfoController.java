@@ -34,8 +34,11 @@ public class NewMerchInfoController {
         SysUserEntity user = getUser();
         if(user.getDeptId()!=1) //如果不顶层商铺管理员 就要加上过滤条件
         {
+
             params.put("parentId",user.getDeptId());
+            params.put("orDeptId",user.getDeptId());
         }
+
         //处理查询参数问题
         Query query = new Query(params);
         List<NewMerchInfoEntity> list = service.queryList(query);

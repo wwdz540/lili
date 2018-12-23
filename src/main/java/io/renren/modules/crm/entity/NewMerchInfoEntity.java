@@ -1,6 +1,5 @@
 package io.renren.modules.crm.entity;
 
-import io.renren.modules.crm.service.RateConfigService;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,6 +27,7 @@ public class NewMerchInfoEntity {
     private int quickSettle;
     private String industry;
     private String merchnoSub;
+    private String path;
 
 //
 //    //部门ID
@@ -241,5 +241,13 @@ public class NewMerchInfoEntity {
 
     public void setMerchId(Long merchId) {
         this.merchId = merchId;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

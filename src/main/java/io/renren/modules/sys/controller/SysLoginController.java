@@ -4,7 +4,9 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import io.renren.common.utils.R;
 import io.renren.common.utils.ShiroUtils;
+import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysDeptService;
 import io.renren.modules.sys.service.SysUserService;
 import io.renren.modules.sys.service.SysUserTokenService;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +22,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,6 +40,9 @@ public class SysLoginController {
 	private SysUserService sysUserService;
 	@Autowired
 	private SysUserTokenService sysUserTokenService;
+
+	@Autowired
+	private SysDeptService sysDeptService;
 
 	@RequestMapping("captcha.jpg")
 	public void captcha(HttpServletResponse response)throws ServletException, IOException {
@@ -80,6 +86,21 @@ public class SysLoginController {
 
 		//生成token，并保存到数据库
 		R r = sysUserTokenService.createToken(user.getUserId());
+
+
+
+		Map userInfo = new HashMap();
+		userInfo.put("userId",user.getUserId());
+		userInfo.put("deptId",user.getDeptId());
+
+
+		SysDeptEntity dept = sysDeptService.queryObject(user.getDeptId());
+		userInfo.put("parentId",dept.getParentId());
+		userInfo.put("deptType",dept.getDeptType());
+		userInfo.put("deptName",dept.getName());
+
+		r.put("userInfo",userInfo);
+
 		return r;
 	}
 	

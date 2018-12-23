@@ -22,4 +22,6 @@ public interface TransDataDao extends BaseDao<TransDataEntity> {
 	List<TransDataEntity> queryTodayData(Map<String, Object> map);
 
 	List<GroupByCardType> groupByCardType(Map<String, Object> map);
+
+	Integer queryAvg(Map<String, Object> map);
 }

@@ -62,7 +62,7 @@ $(function () {
     });
 });
 
-var mtype={1:"商铺",2:"代理商",3:"企业集团",4:"代理子帐户",5:"企业子帐户"};
+var mtype={1:"商铺",2:"代理商",3:"集团公司",4:"代理子帐户",5:"集团公司子帐户"};
 
 
 var vm = new Vue({
@@ -84,7 +84,7 @@ var vm = new Vue({
 		title:null,
 		users:[],
 		merch:{
-			id:null,
+			id:0,
             deptType:null,
             parentId:0,
 			rateConfigs:this.defaultRate
@@ -95,8 +95,12 @@ var vm = new Vue({
     },
 	methods: {
 		query: function () {
-			vm.q.parentId=0;
-			vm.reload();
+			vm.q.parentId=userInfo.parentId;
+
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:vm.q,
+                page:0
+            }).trigger("reloadGrid");
 		},
         queryChild:function(parentId){
 			vm.q.deptType=0;
@@ -112,6 +116,7 @@ var vm = new Vue({
 
 		},
 		addChild:function(parentId,dtype,parentName){
+            vm.reInit();
 
             vm.title = "新增["+parentName+"]商铺户";
             vm.merch.parentId = parentId;
@@ -140,9 +145,17 @@ var vm = new Vue({
         },
 		update: function () {
             var merchId = getSelectedRow();
+
+            if(!merchId){
+            	return;
+			}
+
             $.get(baseURL + "crm/newmerchInfo/info/"+merchId, function(r){
                 vm.merch = r.data;
                 vm.showList = false;
+                if(vm.merch.rateConfigs==null || vm.merch.rateConfigs.length==0){
+                	vm.merch.rateConfigs = vm.defaultRate;
+				}
                 vm.title = "修改";
             });
 		},
@@ -204,8 +217,11 @@ var vm = new Vue({
 		},
 		reInit: function () {
 			vm.merch.id = null;
-			vm.merch.parentId=1;
-			vm.merch.deptType =null;
+			vm.merch.parentId=userInfo.deptId;
+
+			vm.merch.deptType =1;
+
+
             vm.merch.rateConfigs = vm.defaultRate;
             vm.merch.name='';
             vm.merch.legalName='';

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商户管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+
+    <link href="../../plugins/daterangepicker.css" rel="stylesheet">
+    <script src="../../plugins/moment.min.js"></script>
+    <script src="../../libs/daterangepicker.js"></script>
+
+    <script src="../../js/common.js"></script>
+
+</head>
+<body>
+<div id="rrapp" v-cloak>
+
+        <div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <input type="text"  class="form-control" v-model="q.dateRange" id="daterange-btn"/>
+            </div>
+
+            <div class="form-group col-xs-2">
+                <input type="text"  class="form-control" v-model="q.dateRange" id="daterange-btn"/>
+            </div>
+
+            <a class="btn btn-default" @click="query">查询</a>
+            <a class="btn btn-default" @click="query">导出excel</a>
+
+            <span style="color: red" id="sharpoint"></span>
+
+        </div>
+<table class="table">
+    <tr>
+        <th>
+            代理/商铺名称
+        </th>
+        <th>
+            总数条数
+        </th>
+        <th>
+            平均每单
+        </th>
+        <th>
+            总金额
+        </th>
+        <th>
+            分润
+        </th>
+    </tr>
+     <tr v-for = "n in list">
+        <td>
+
+            {{n.name}}
+            <template v-if="n.dtype==2">
+                <span style="color:blue">[代理]</span>
+            </template>
+        </td>
+        <td>
+            {{formatNumber(n.count)}}
+        </td>
+         <td>
+             {{formatNumber(n.avg)}}
+         </td>
+         <td>
+             {{formatNumber(n.sum)}}
+         </td>
+         <td>
+
+         </td>
+    </tr>
+</table>
+
+</div>
+<script type="text/javascript">
+
+
+    $(function () {
+
+
+        var locale = {
+            "format": 'YYYY-MM-DD',
+            "separator": " - ",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel": "结束时间'",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1
+        };
+        //初始化
+        $('#daterange-btn').daterangepicker({
+                'locale': locale,
+                ranges: {
+                    // '今日': [moment(), moment()],
+                    '昨日至天': [moment().subtract(1, 'days'), moment()],
+                    '最近7日': [moment().subtract(6, 'days'), moment()],
+                    '最近30日': [moment().subtract(29, 'days'), moment()],
+                    '本月': [moment().startOf('month'), moment().endOf('month')],
+                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                // startDate: moment().subtract(0, 'days'),
+                startDate: moment(),
+                endDate: moment()
+            },
+            function (start, end) {
+                vm.q.dateStart = start.format('YYYY-MM-DD');
+                vm.q.dateEnd = end.format('YYYY-MM-DD');
+            });
+    })
+    var vm = new Vue({
+            el: '#rrapp',
+            data:{
+                q:{},
+                list:[]
+            },
+            created:function(){
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + "crm/statistic/list",
+                    dataType: "json",
+                    success: function(r){
+                        vm.list =r;
+                    }
+                });
+
+
+            },
+            methods:{
+                query:function(){
+
+                },
+                formatData(d,dtype){
+
+                    if(dtype == 1){
+                        return d;
+                    }else{
+                        return "<span style=' color: #0f6ab4'>"+d+"</span>"
+                    }
+
+                },
+                formatNumber(d){
+                    var result = d;
+                    if(!d || d == ""){
+                        result = 0;
+                    }
+                    return result;
+                }
+            }
+        });
+</script>
+</body>
+</html>

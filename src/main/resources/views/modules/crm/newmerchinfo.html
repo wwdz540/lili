@@ -29,22 +29,26 @@
 
 	<div v-show="showList">
 		<div class="grid-btn">
-			<div class="form-group col-xs-2">
 
-			<select v-model="q.deptType" class="form-control">
-				<option value="0">全部</option>
-				<option value="1">商户</option>
-				<option value="2">代理商</option>
-				<option value="3">集团公司</option>
-			</select>
+			<div class="form-group col-xs-2">
+				<select v-model="q.deptType" class="form-control">
+					<option value="0">全部</option>
+					<option value="1">商户</option>
+					<option value="2">代理商</option>
+					<option value="3">集团公司</option>
+				</select>
 			</div>
+
 			<div class="form-group col-sm-2">
 				<input type="text" class="form-control" v-model="q.keyword" @keyup.enter="query" placeholder="商户名称/商户编号/用户名">
 			</div>
+
 			<a class="btn btn-default" @click="query">查询</a>
+			<template v-if="userInfo.parentId==1 || userInfo.parentId==0">
 			<a v-if="hasPermission('merch:all')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增商户</a>
 			<a v-if="hasPermission('merch:all')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('merch:all')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</template>
 
 		</div>
 	    <table id="jqGrid"></table>
@@ -64,15 +68,15 @@
 						<input type="radio" v-model="merch.deptType" value="1"> 商户
 					</label>
 					<label class="radio-inline">
-						<input type="radio" v-model="merch.deptType" value="2"> 代理
+						<input type="radio" v-model="merch.deptType" value="2"> 代理商
 					</label>
 					<label class="radio-inline">
-						<input type="radio" v-model="merch.deptType" value="3"> 企业
+						<input type="radio" v-model="merch.deptType" value="3"> 集团公司
 					</label>
 				</div>
 			</div>
 			</template>
-			<template v-if="merch.deptType != '2'">
+
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">商户编号</div>
 			   	<div class="col-sm-10">
@@ -85,7 +89,7 @@
 					<input type="text" class="form-control" v-model="merch.merchnoSub" placeholder="盛大商户编号"/>
 				</div>
 			</div>
-			</template>
+
 
 			<!--<div class="form-group">-->
 				<!--<div class="col-sm-2 control-label">部门名称</div>-->
