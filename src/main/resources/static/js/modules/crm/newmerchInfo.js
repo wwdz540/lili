@@ -62,7 +62,7 @@ $(function () {
     });
 });
 
-var mtype={1:"商铺",2:"代理商",3:"集团公司",4:"代理子帐户",5:"集团公司子帐户"};
+var mtype={0:"",1:"商铺",2:"代理商",3:"集团公司",4:"代理子帐户",5:"集团公司子帐户"};
 
 
 var vm = new Vue({
@@ -118,7 +118,7 @@ var vm = new Vue({
 		addChild:function(parentId,dtype,parentName){
             vm.reInit();
 
-            vm.title = "新增["+parentName+"]商铺户";
+            vm.title = "新增["+parentName+"]商铺";
             vm.merch.parentId = parentId;
             switch(dtype){
 				case 1:
