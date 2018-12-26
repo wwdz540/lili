@@ -103,11 +103,8 @@ public class DateUtils {
         if(start == null ||StringUtils.isBlank(start.toString())){
             params.put("dateStart",yestodayString+" 12:00:00");
             params.put("dateEnd",todayString+" 12:00:00");
-        }else if (StringUtils.trim(end.toString()).equals(todayString)) { //如果是今天的话
-            params.put("dateStart",start+" 12:00:00");
-            DateFormat sf = new SimpleDateFormat("HH:mm:ss");
-            params.put("dateEnd",end+" "+ sf.format(new Date()));
-        }else{
+        }
+        else{
             params.put("dateStart",start+" 12:00:00");
             params.put("dateEnd",end+" 12:00:00");
         }

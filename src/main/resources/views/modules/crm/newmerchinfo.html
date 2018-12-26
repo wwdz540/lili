@@ -76,6 +76,19 @@
 				</div>
 			</div>
 			</template>
+			<template v-else-if="merch.parentType==2">
+				<div class="form-group">
+					<div class="col-sm-2 control-label">类别</div>
+					<div class="col-sm-10">
+						<label class="radio-inline">
+							<input type="radio" v-model="merch.deptType" value="1"> 商户
+						</label>
+						<label class="radio-inline">
+							<input type="radio" v-model="merch.deptType" value="3"> 集团公司
+						</label>
+					</div>
+				</div>
+			</template>
 
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">商户编号</div>

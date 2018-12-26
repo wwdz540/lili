@@ -26,6 +26,10 @@
             or dept.name like concat('%',#{keyword},'%')
             or dept.legal_name like concat('%',#{keyword},'%'))
         </if>
+
+        <if test="path !=null and path != ''">
+            and dept.path like concat(#{path},'%')
+        </if>
     </select>
 
     <select id="queryList" resultType="io.renren.modules.crm.entity.NewMerchInfoEntity">
@@ -51,6 +55,11 @@
             merch.merchno =#{keyword}
             or dept.name like concat('%',#{keyword},'%')
             or dept.legal_name like concat('%',#{keyword},'%'))
+        </if>
+
+
+        <if test="path !=null and path != ''">
+            and dept.path like concat(#{path},'%')
         </if>
 
           order by dept.path  asc

@@ -96,23 +96,25 @@ var vm = new Vue({
             };
             //初始化
             $('#daterange-btn').daterangepicker({
-                'locale': locale,
-                ranges: {
-                    '今日': [moment(), moment()],
-                    '昨日': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    '最近7日': [moment().subtract(6, 'days'), moment()],
-                    '最近30日': [moment().subtract(29, 'days'), moment()],
-                    '本月': [moment().startOf('month'), moment().endOf('month')],
-                    '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    'locale': locale,
+                    ranges: {
+                        // '今日': [moment(), moment()],
+                        '昨日至现在':[moment().subtract(1, 'days'),moment().add(1,'days')],
+                        '昨日至今天': [moment().subtract(1, 'days'), moment()],
+                        '最近7日': [moment().subtract(6, 'days'), moment()],
+                        '最近30日': [moment().subtract(29, 'days'), moment()],
+                        '本月': [moment().startOf('month'), moment().endOf('month')],
+                        '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    // startDate: moment().subtract(0, 'days'),
+                    startDate: moment(),
+                    endDate: moment()
                 },
-                // startDate: moment().subtract(0, 'days'),
-                startDate: moment(),
-                endDate: moment()
-            },
-            function (start, end) {
-                vm.q.dateStart = start.format('YYYY-MM-DD');
-                vm.q.dateEnd = end.format('YYYY-MM-DD');
-            });
+                function (start, end) {
+
+                    vm.q.dateStart = start.format('YYYY-MM-DD');
+                    vm.q.dateEnd = end.format('YYYY-MM-DD');
+                });
         }
 	},
     mounted:function () {

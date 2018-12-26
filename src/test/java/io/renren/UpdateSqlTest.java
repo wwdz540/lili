@@ -54,7 +54,7 @@ public class UpdateSqlTest {
        List<SysUserEntity> list =  userService.findAll();
 
        for(SysUserEntity entity : list){
-           if(entity.getUserId() == 1){ //表示admin 底下所有商铺都为直隶商铺
+           if(entity.getUserId() == 1){ //表示admin 底下所有商户都为直隶商铺
                update(1l,1,entity);
                continue;
            }

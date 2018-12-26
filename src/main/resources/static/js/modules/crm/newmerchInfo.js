@@ -25,7 +25,7 @@ $(function () {
 						case 2:
 						case 3:
                             opStr = "<a title='添加商铺' href='###' class='fa fa-plus' onclick='vm.addChild("+merch.id+","+merch.deptType+" ,\""+merch.name+"\")'> </a>";
-                            opStr += "&nbsp;&nbsp;&nbsp;<a title='查看子商铺' href='####' class='glyphicon glyphicon-zoom-in' onclick='vm.queryChild("+merch.id+")' ></a>";
+                            opStr += "&nbsp;&nbsp;&nbsp;<a title='查看子商铺' href='####' class='glyphicon glyphicon-zoom-in' onclick='vm.queryChild(\""+merch.path+"\")' ></a>";
                             break;
 						default:
 							break;
@@ -62,7 +62,7 @@ $(function () {
     });
 });
 
-var mtype={0:"",1:"商铺",2:"代理商",3:"集团公司",4:"代理子帐户",5:"集团公司子帐户"};
+var mtype={0:"平台",1:"商户",2:"代理商",3:"集团公司",4:"代理子帐户",5:"集团公司子帐户"};
 
 
 var vm = new Vue({
@@ -95,17 +95,21 @@ var vm = new Vue({
     },
 	methods: {
 		query: function () {
-			vm.q.parentId=userInfo.parentId;
+			//vm.q.parentId=userInfo.parentId; //@Todo 待修改
+
+			vm.q.path = "";
 
             $("#jqGrid").jqGrid('setGridParam',{
                 postData:vm.q,
                 page:0
             }).trigger("reloadGrid");
 		},
-        queryChild:function(parentId){
+        queryChild:function(path){
+			console.log(path);
 			vm.q.deptType=0;
 			vm.q.keyword="";
-			vm.q.parentId = parentId;
+			//vm.q.parentId = parentId;
+			vm.q.path = path;
             vm.reload();
 		},
 		add: function(){
@@ -120,6 +124,7 @@ var vm = new Vue({
 
             vm.title = "新增["+parentName+"]商铺";
             vm.merch.parentId = parentId;
+            vm.merch.parentType = dtype;
             switch(dtype){
 				case 1:
                     vm.merch.rateConfigs = vm.defaultRate;

@@ -68,7 +68,7 @@ $(function () {
             }
         }
     });
-    vm.getDept();
+
 });
 
 var  fmtFun= function (a,b,c) {
@@ -98,8 +98,8 @@ var vm = new Vue({
 		q:{
 			merchName: "",
             leaderName:"",
-            dateStart:"",
-            dateEnd:"",
+            dateStart:moment().subtract(1,"days").format("YYYY-MM-DD"),
+            dateEnd:moment().format("YYYY-MM-DD"),
             dateRange:"",
             deptId:0,
             issuerCode:""
@@ -154,7 +154,8 @@ var vm = new Vue({
                 'locale': locale,
                 ranges: {
                     // '今日': [moment(), moment()],
-                    '昨日至天': [moment().subtract(1, 'days'), moment()],
+                    '昨日至现在':[moment().subtract(1, 'days'),moment().add(1,'days')],
+                    '昨日至今天': [moment().subtract(1, 'days'), moment()],
                     '最近7日': [moment().subtract(6, 'days'), moment()],
                     '最近30日': [moment().subtract(29, 'days'), moment()],
                     '本月': [moment().startOf('month'), moment().endOf('month')],
@@ -165,6 +166,7 @@ var vm = new Vue({
                 endDate: moment()
             },
             function (start, end) {
+
                 vm.q.dateStart = start.format('YYYY-MM-DD');
                 vm.q.dateEnd = end.format('YYYY-MM-DD');
             });
@@ -186,10 +188,10 @@ var vm = new Vue({
         deptTree: function(){
 
             layer.open({
-                type: 1,
+                type:  1,
                 offset: '50px',
                 skin: 'layui-layer-molv',
-                title: "选择部门",
+                title: "选择商户",
                 area: ['300px', '450px'],
                 shade: 0,
                 shadeClose: false,
@@ -225,7 +227,7 @@ var vm = new Vue({
         }
 	},
     mounted:function () {
+        this.getDept();
         this.initDate();
-
     }
 });
