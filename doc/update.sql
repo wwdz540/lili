@@ -4,6 +4,9 @@ ALTER TABLE sys_dept ADD legal_name varchar(64);
 ALTER TABLE sys_dept ADD mobile varchar(64);
 ALTER TABLE sys_dept ADD address varchar(128);
 ALTER TABLE sys_dept ADD industry varchar(64);
+ALTER TABLE sys_dept ADD path varchar(100);
+
+ALTER TABLE trans_data ADD share_benefit DECIMAL(16,2);
 
 
 ALTER TABLE merch_info
@@ -17,7 +20,7 @@ CREATE TABLE rate_config
   pay_type varchar(20) NOT NULL COMMENT '支付方式',
   rate float COMMENT '费率',
   max float COMMENT '最高',
-  share_benefit float COMMENT '最低',
+  share_benefit float COMMENT '分润',
   CONSTRAINT rate_config_sys_dept_dept_id_fk FOREIGN KEY (dept_id) REFERENCES sys_dept (dept_id)
 );
 CREATE UNIQUE INDEX rate_config_dept_id_pay_type_uindex ON rate_config (dept_id, pay_type);

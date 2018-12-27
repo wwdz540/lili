@@ -32,6 +32,8 @@ public class StatisticController  {
             " where %s \n"
             ;
 
+    //private static final
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -42,21 +44,11 @@ public class StatisticController  {
     public List list(){
         return query("count(td.amt) as count,sum(td.amt)/100 as sum ,avg(td.amt)/100 as avg");
     }
-    
-/*
-    private List<NewMerchInfoEntity> groupQuery(){
-        Map<String,Object> params = new HashMap<>();
-        params.put("deptType",1);
-        List<NewMerchInfoEntity>  list = merchInfoService.queryList(params);
-        
-        //Map<String,Object> params = new HashMap<>();
-        params.put("deptType",2);
-        List<NewMerchInfoEntity> list1 = merchInfoService.queryList(params);
-        list.addAll(list1);
-        
-        return list;
-    }
-*/
+
+
+
+
+
 
     private List query(String groupField){
 
@@ -65,8 +57,6 @@ public class StatisticController  {
                 "dept.parent_id");
         System.out.println(agencyGroup);
         List<Map<String, Object>> list2 = jdbcTemplate.query(agencyGroup, new MyColumnMapRowMapper());
-        //List<Map<String, Object>> list2 = jdbcTemplate.queryForList(agencyGroup);
-       // list2.addAll(list1);
         return  list2;
     }
 
