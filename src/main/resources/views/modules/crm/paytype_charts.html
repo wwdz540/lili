@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商户管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+
+    <link href="../../plugins/daterangepicker.css" rel="stylesheet">
+    <script src="../../plugins/moment.min.js"></script>
+    <script src="../../libs/daterangepicker.js"></script>
+
+    <script src="../../js/common.js"></script>
+    <script src="../../libs/echarts.min.js"></script>
+
+</head>
+<body>
+    <div id="rrapp">
+        <div class="grid-btn">
+
+            <div class="form-group col-xs-2">
+                <select  class="form-control">
+                    <option>总销额</option>
+                    <option>客单价</option>
+                </select>
+            </div>
+
+            <div class="form-group col-xs-2">
+                <input type="text" class="form-control" style="cursor:pointer;" v-model="queryDeptName"  @click="deptTree" readonly="readonly" placeholder="所属部门"/>
+            </div>
+
+            <div class="form-group col-xs-2">
+                <input type="text" class="form-control" v-model="q.merchName"  placeholder="商户名称">
+            </div><!--
+            <div class="form-group col-xs-2">
+                <input type="text"  class="form-control" v-model="q.dateRange" id="daterange-btn"/>
+            </div>-->
+            <a class="btn btn-default" @click="query">查询</a>
+        </div>
+        <div id="main-chart" style="height: 400px">
+
+        </div>
+
+    </div>
+    <!-- 选择部门 -->
+    <div id="deptLayer" style="display: none;padding:10px;">
+        <ul id="deptTree" class="ztree"></ul>
+    </div>
+    <script>
+
+        var option = {
+            title : {
+                text: '平台数据统计'
+
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['微信','支付宝','借记卡','贷记卡']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    // dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    barGap: 0,
+                    name:'微信',
+                    type:'bar',
+                    data:[2.2, 4.5, 7.2, 23.2, 25.6, 76.1, 125.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+                },
+                {
+                    name:'支付宝',
+                    type:'bar',
+                    data:[2.3, 4.2, 7.2, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+                },
+                {
+                    name:'借记卡',
+                    type:'bar',
+                    data:[2.3, 4.2, 7.0, 23.2, 25.6, 76.7, 13.6, 162.2, 35.6, 20.0, 6.4, 3.3]
+                },
+                {
+                    name:'贷记卡',
+                    type:'bar',
+                    data:[2.3, 4.2, 7.5, 23.2, 25.6, 216.7, 135.6, 102.2, 12.6, 20.0, 6.4, 3.3]
+                }
+            ]
+        };
+
+        var myChart = echarts.init(document.getElementById('main-chart'));
+        myChart.setOption(option);
+
+
+        var vm = new Vue({
+            data : {
+                q:{
+                    merchName: "",
+                    deptId:0,
+                    issuerCode:""
+                }
+            },
+            methods : {
+                getDept: function(){
+                    //加载部门树
+                    $.get(baseURL + "sys/dept/list", function(r){
+                        ztree = $.fn.zTree.init($("#deptTree"), setting, r);
+                        var node = ztree.getNodeByParam("deptId", userInfo.deptId);
+                        if(node != null){
+                            ztree.selectNode(node);
+
+                            vm.queryDeptName = node.name;
+                        }
+                    })
+                },
+
+                deptTree: function(){
+                    console.log("dept tree ==");
+
+                    layer.open({
+                        type:  1,
+                        offset: '50px',
+                        skin: 'layui-layer-molv',
+                        title: "选择商户",
+                        area: ['300px', '450px'],
+                        shade: 0,
+                        shadeClose: false,
+                        content: jQuery("#deptLayer"),
+                        btn: ['确定', '取消'],
+                        btn1: function (index) {
+                            var node = ztree.getSelectedNodes();
+
+
+                            if(node[0].deptId == 1)
+                            {
+                                vm.q.deptId = 0;
+                                vm.q.parentId = 0;
+                            }
+                            else if(node[0].deptType == 2 || node[0].deptType == 3 ){
+                                vm.q.deptId = 0;
+                                vm.q.parentId = node[0].deptId;
+                            }else{
+
+                                vm.q.deptId = node[0].deptId;
+                                vm.q.parentId = 0;
+                            }
+
+
+                            //选择上级部门
+                            // vm.user.deptId = node[0].deptId;
+                            // vm.user.deptName = node[0].name;
+                            vm.queryDeptName =  node[0].name;
+
+                            layer.close(index);
+                        }
+                    });
+                }
+            },
+            mounted:function () {
+                this.getDept();
+            }
+        });
+    </script>
+</body>
+</html>
