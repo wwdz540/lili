@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.crm.dao.FyTransDataDao">
+
+    <sql id="cnd">
+        m.enabled = 1
+        <if test="path != null and path.trim() !=''">
+            and dept.path like concat(#{path},'%')
+        </if>
+        <if test="merchName != null and merchName.trim() != ''">
+            and m.merch_name like concat('%',#{merchName},'%')
+        </if>
+
+        <if test="dateStart != null">
+            and t.createtime &gt;= #{dateStart}
+        </if>
+        <if test="dateEnd != null">
+            and t.createtime &lt;= #{dateEnd}
+        </if>
+
+        <if test="issuerCode != null and issuerCode !='' ">
+            and t.pay_type = #{issuerCode}
+        </if>
+        <if test="cardType != null and cardType != ''">
+            and t.card_type = #{cardType}
+        </if>
+    </sql>
+    <sql id="join_table">
+        fy_trans_data d
+        left join merch_info as m on d.merchantno_fuiou = m.merchno
+        left join sys_dept as dept on m.dept_id = dept.dept_id
+    </sql>
+
+
+    <select id="queryList" resultType="io.renren.modules.crm.entity.TransDataEntity">
+        select d.id as id ,
+        d.out_trade_no as trace_no  ,
+        d.total_fee as amt,
+        d.merchantno_fuiou as merchant_id,
+        dept.name,
+        d.share_benefit,
+        d.createtime as txn_datetime,
+        d.terminal_trace as txn_ref,
+        d.terminal_id ,
+        right(d.cardno,4) as shortPan,
+        d.pay_status as respCode,
+        d.pay_type as issuerCode ,
+        d.card_type as cardType
+
+        from
+        <include refid="join_table"/>
+        WHERE
+        <include refid="cnd" />
+        order by t.id asc
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select COUNT(*)
+        from
+        <include refid="join_table"/>
+        WHERE
+        <include refid="cnd" />
+    </select>
+
+    <select id="queryByGroup" resultType="java.util.Map">
+        select
+        <if test="gfield !=null and gfield !=''">
+        ${gfield},
+        </if>
+        ${collection} from
+        <include refid="join_table"/>
+        where
+        <include refid="cnd" />
+        <if test="gfield !=null and gfield !=''">
+            group by ${gfield}
+        </if>
+        ;
+    </select>
+
+
+</mapper>
