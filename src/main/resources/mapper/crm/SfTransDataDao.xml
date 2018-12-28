@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.crm.dao.FyTransDataDao">
+<mapper namespace="io.renren.modules.crm.dao.SfTransDataDao">
 
     <sql id="cnd">
         m.enabled = 1
@@ -13,46 +13,38 @@
         </if>
 
         <if test="dateStart != null">
-            and t.createtime &gt;= #{dateStart}
+            and t.txn_dateTime &gt;= #{dateStart}
         </if>
         <if test="dateEnd != null">
-            and t.createtime &lt;= #{dateEnd}
+            and t.txn_dateTime &lt;= #{dateEnd}
+        </if>
+        <if test="merchno !=null">
+            and t.merchantId = #{merchno}
         </if>
 
         <if test="issuerCode != null and issuerCode !='' ">
-            and t.pay_type = #{issuerCode}
+            and t.issuerCode = #{issuerCode}
         </if>
         <if test="cardType != null and cardType != ''">
-            and t.card_type = #{cardType}
+            and t.cardType = #{cardType}
         </if>
+
     </sql>
     <sql id="join_table">
-        fy_trans_data t
-        left join merch_info as m on t.merchantno_fuiou = m.merchno
-        left join sys_dept as dept on m.dept_id = dept.dept_id
+        trans_data t
+		LEFT JOIN merch_info m ON m.merchno = t.merchantId
+		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
     </sql>
 
 
     <select id="queryList" resultType="io.renren.modules.crm.entity.TransDataEntity">
-        select t.id as id ,
-        t.out_trade_no as trace_no  ,
-        t.total_fee as amt,
-        t.merchantno_fuiou as merchant_id,
-        dept.name,
-        t.share_benefit,
-        t.createtime as txn_datetime,
-        t.terminal_trace as txn_ref,
-        t.terminal_id ,
-        right(t.cardno,4) as shortPan,
-        t.pay_status as respCode,
-        t.pay_type as issuerCode ,
-        t.card_type as cardType
-
+        select
+        t.*, m.merch_name AS merchName
         from
         <include refid="join_table"/>
         WHERE
         <include refid="cnd" />
-        order by t.id asc
+        order by t.id desc
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
@@ -77,8 +69,7 @@
         <include refid="cnd" />
         <if test="gfield !=null and gfield !=''">
             group by ${gfield}
-        </if>
-        ;
+        </if>;
     </select>
 
 

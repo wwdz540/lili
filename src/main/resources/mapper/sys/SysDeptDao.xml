@@ -7,6 +7,10 @@
 		select * from sys_dept where dept_id = #{value} and del_flag = 0
 	</select>
 
+	<select id="queryObjectByPath" resultType="io.renren.modules.sys.entity.SysDeptEntity">
+		select * from sys_dept where path = #{value} and del_flag = 0
+	</select>
+
 	<select id="queryList" resultType="io.renren.modules.sys.entity.SysDeptEntity">
 		select d.*,(select p.name from sys_dept p where p.dept_id = d.parent_id) as parentName
 		from sys_dept d where d.del_flag = 0

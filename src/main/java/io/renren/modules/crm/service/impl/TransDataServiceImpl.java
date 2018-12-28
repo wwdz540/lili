@@ -20,6 +20,7 @@ import java.util.*;
 
 @Service("transDataService")
 public class TransDataServiceImpl implements TransDataService{
+    private static final BigDecimal ONE_HUNDRED = BigDecimal.valueOf(100);
 
     @Autowired
     private TransDataDao transDataDao;
@@ -47,7 +48,9 @@ public class TransDataServiceImpl implements TransDataService{
             entity.setAmt(String.valueOf(amt));
 
             //分润
-            entity.setSharePoint(CommonUtil.sharePoint(amt,entity.getCardType()));
+            if(entity.getShareBenefit()!=null) {
+                entity.setSharePoint(BigDecimal.valueOf(entity.getShareBenefit()).divide(ONE_HUNDRED, 2, BigDecimal.ROUND_HALF_UP));
+            }
 
             entity.setCardType(TypeUtils.cardType(entity.getCardType()));
             entity.setIssuerCode(TypeUtils.payType(entity.getIssuerCode()));
@@ -166,12 +169,12 @@ public class TransDataServiceImpl implements TransDataService{
             BigDecimal amt = new BigDecimal(entity.getAmt()).divide(BigDecimal.valueOf(100),2,BigDecimal.ROUND_HALF_UP);
             amount = amount.add(amt);
             //分润计算
-            BigDecimal sp = CommonUtil.sharePoint(amt,entity.getCardType(),userEntity);
+            BigDecimal sp = BigDecimal.valueOf(entity.getShareBenefit()); //CommonUtil.sharePoint(amt,entity.getCardType(),userEntity);
             sharePoint = sharePoint.add(sp);
         }
         Map<String,Object> result = new HashMap<>();
         result.put("amount",amount);//总金额
-        result.put("sharePoint",sharePoint); //总分润
+        result.put("sharePoint",sharePoint.divide(ONE_HUNDRED,2,BigDecimal.ROUND_HALF_UP)); //总分润
         return result;
     }
 

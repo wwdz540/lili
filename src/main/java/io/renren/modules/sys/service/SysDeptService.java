@@ -13,8 +13,9 @@ import java.util.Map;
  * @date 2017-06-20 15:23:47
  */
 public interface SysDeptService {
-	
+
 	SysDeptEntity queryObject(Long deptId);
+	SysDeptEntity queryObjectByPath(String path);
 	
 	List<SysDeptEntity> queryList(Map<String, Object> map);
 
@@ -25,6 +26,8 @@ public interface SysDeptService {
 	void update(SysDeptEntity sysDept);
 	
 	void delete(Long deptId);
+
+
 
 	/**
 	 * 查询子部门ID列表

@@ -22,4 +22,6 @@ public interface SysDeptDao extends BaseDao<SysDeptEntity> {
      * @param parentId  上级部门ID
      */
     List<Long> queryDetpIdList(Long parentId);
+
+    SysDeptEntity queryObjectByPath(String path);
 }

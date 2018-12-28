@@ -7,6 +7,7 @@ ALTER TABLE sys_dept ADD industry varchar(64);
 ALTER TABLE sys_dept ADD path varchar(100);
 
 ALTER TABLE trans_data ADD share_benefit DECIMAL(16,2);
+ALTER TABLE fy_trans_data ADD share_benefit DECIMAL(16,2);
 
 
 ALTER TABLE merch_info

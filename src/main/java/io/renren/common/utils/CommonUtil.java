@@ -3,6 +3,7 @@ package io.renren.common.utils;
 import com.alibaba.fastjson.JSON;
 import io.renren.modules.crm.utils.TypeUtils;
 import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysDeptService;
 import org.apache.shiro.SecurityUtils;
 
 import java.math.BigDecimal;
@@ -10,7 +11,24 @@ import java.util.List;
 
 public class CommonUtil {
 
-    public static BigDecimal sharePoint(BigDecimal amt,String cardTypeCode){
+    private static SysDeptService sysDeptService;
+
+    public static void setSysDeptService(SysDeptService sysDeptService) {
+        CommonUtil.sysDeptService = sysDeptService;
+    }
+
+    /***
+     * 把分转换成元
+     * @param obj
+     * @return
+     */
+    public static String formatAB(Object obj){ //@TODO 方法名待重构
+        if(obj == null) return "0";
+        BigDecimal b = new BigDecimal(obj.toString());
+        BigDecimal result = b.divide(BigDecimal.valueOf(100l),2,BigDecimal.ROUND_HALF_UP);
+        return result.toString();
+    }
+    public static BigDecimal sharePoint(BigDecimal amt, String cardTypeCode){
         return sharePoint(amt,cardTypeCode,null);
     }
 
@@ -65,14 +83,20 @@ public class CommonUtil {
     }
 
     public static boolean isAdmin(){
-        return getUser().getUserId() == Constant.SUPER_ADMIN;
+        return getUser().getDeptId() == 1;
     }
 
     public static boolean isDL(){
-        return getUser().getDeptId() == 8;
+        int  type = sysDeptService.queryObject(getUser().getDeptId()).getDeptType() ;
+        return type == 2;
     }
 
     public static boolean isMerch(){
-        return getUser().getDeptId() == 10;
+       int  type = sysDeptService.queryObject(getUser().getDeptId()).getDeptType() ;
+        //return getUser().getDeptId() == 10;
+        return type ==1
+                || type==4
+                || type==5
+                || type==3;
     }
 }

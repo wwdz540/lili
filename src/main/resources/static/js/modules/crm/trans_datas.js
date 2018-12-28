@@ -1,8 +1,9 @@
 $(function () {
 
     $("#jqGrid").jqGrid({
-        url: baseURL + 'crm/transData/list',
+        url: baseURL + 'crm/td/list',
         datatype: "json",
+        postData:vm.q,
         colModel: [
             { label: 'ID', name: 'id', width: 35 },
 			{ label: '订单号', name: 'orderId', width: 40},
@@ -46,10 +47,9 @@ $(function () {
         	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
             $.ajax({
                 type: "get",
-                url: baseURL + "crm/transData/sharePoint",
+                url: baseURL + "crm/td/summary",
                 contentType: "application/json",
-                data: {'merchName': vm.q.merchName,'leaderName': vm.q.leaderName,'dateStart': vm.q.dateStart,'dateEnd': vm.q.dateEnd},
-                // data: vm.q,
+                data: vm.q,
                 success: function(r){
                     $("#sharpoint").html("总金额："+r.amount+",分润："+r.sharePoint);
                 }
@@ -89,10 +89,7 @@ var vm = new Vue({
 		q:{
 			merchName: "",
             leaderName:"",
-           // dateStart:moment().subtract(1,"days").format("YYYY-MM-DD"),
-           // dateEnd:moment().format("YYYY-MM-DD"),
-           // dateRange:"",
-            deptId:0,
+            ds:"fy",
             issuerCode:"",
             cardType:"",
             payMethod:""
@@ -107,32 +104,14 @@ var vm = new Vue({
 	},
 	methods: {
 		query: function () {
-		    var payMethod = vm.q.payMethod
-            console.log(payMethod)
-		    if(payMethod.startsWith("|")){
-
-                vm.q.cardType = payMethod.substr(1,payMethod.length)
-                vm.q.issuerCode = "";
-                console.log("======")
-                console.log( vm.q.cardType)
-
-            }else{
-		        vm.q.issuerCode = payMethod;
-		        vm.q.cardType = "";
-            }
-            console.log(vm.q)
 			vm.reload();
 		},
-		getRole: function(id){
-            $.get(baseURL + "crm/transData/info/"+id, function(r){
-            	vm.transData = r.data;
-				vm.showList = false;
-    		});
-		},
+
         excel: function(){
-		    window.location.href=baseURL + "crm/transData/excel?token="+token+"&dateStart="+vm.q.dateStart+"&dateEnd="+vm.q.dateEnd;
+		    window.location.href=baseURL + "crm/td/excel?token="+token+"&dateStart="+vm.q.dateStart+"&dateEnd="+vm.q.dateEnd;
         },
 	    reload: function () {
+            console.log("=="+vm.q.ds);
 	    	vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
@@ -211,8 +190,7 @@ var vm = new Vue({
                         vm.q.path=node[0].path;
                     }
                     //选择上级部门
-                    // vm.user.deptId = node[0].deptId;
-                    // vm.user.deptName = node[0].name;
+
                     vm.queryDeptName =  node[0].name;
                     layer.close(index);
                 }

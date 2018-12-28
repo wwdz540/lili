@@ -14,6 +14,9 @@
 		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
 		WHERE
 		m.enabled = 1
+		<if test="path != null and path.trim() !=''">
+			and dept.path like concat(#{path},'%')
+		</if>
 		<if test="merchName != null and merchName.trim() != ''">
 			and m.merch_name like concat('%',#{merchName},'%')
 		</if>
@@ -44,6 +47,9 @@
 		<if test="issuerCode != null and issuerCode !='' ">
 			and t.issuerCode = #{issuerCode}
 		</if>
+		<if test="cardType != null and cardType != ''">
+			and t.cardType = #{cardType}
+		</if>
 
 		order by t.id asc
 		<if test="offset != null and limit != null">
@@ -56,6 +62,9 @@
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
 		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
 		WHERE  m.enabled = 1
+		<if test="path != null and path.trim() !=''">
+			and dept.path like concat(#{path},'%')
+		</if>
 		<if test="merchName != null and merchName.trim() != ''">
 			and m.merch_name like concat('%',#{merchName},'%')
 		</if>
@@ -84,6 +93,10 @@
 		<if test="issuerCode != null and issuerCode !='' ">
 			and t.issuerCode = #{issuerCode}
 		</if>
+		<if test="cardType != null and cardType != ''">
+			and t.cardType = #{cardType}
+		</if>
+
 	</select>
 
 	<select id="queryTodayData" resultType="io.renren.modules.crm.entity.TransDataEntity">
@@ -91,12 +104,7 @@
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
 		WHERE m.enabled = 1
 		AND t.txn_dateTime &gt;= #{date}
-		<if test="userIdList != null and userIdList.size() > 0">
-			and m.user_id  IN
-			<foreach collection="userIdList" item="userId" index="index" open="(" close=")" separator=",">
-				#{userId}
-			</foreach>
-		</if>
+
 	</select>
 
 	<select id="groupByCardType" resultType="io.renren.modules.crm.model.GroupByCardType">
@@ -127,6 +135,9 @@
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
 		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
 		WHERE  m.enabled = 1
+		<if test="path != null and path.trim() !=''">
+			and dept.path like concat(#{path},'%')
+		</if>
 		<if test="merchName != null and merchName.trim() != ''">
 			and m.merch_name like concat('%',#{merchName},'%')
 		</if>
@@ -154,6 +165,9 @@
 
 		<if test="issuerCode != null and issuerCode !='' ">
 			and t.issuerCode = #{issuerCode}
+		</if>
+		<if test="cardType != null and cardType != ''">
+			and t.cardType = #{cardType}
 		</if>
 	</select>
 

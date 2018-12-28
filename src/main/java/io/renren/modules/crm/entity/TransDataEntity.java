@@ -25,7 +25,12 @@ public class TransDataEntity {
     private String issuerCode;
 
     private String merchName;
+
+    private Double shareBenefit;
+
     private BigDecimal sharePoint = BigDecimal.ZERO;
+
+
 
     public Integer getId() {
         return id;
@@ -169,5 +174,13 @@ public class TransDataEntity {
 
     public void setSharePoint(BigDecimal sharePoint) {
         this.sharePoint = sharePoint;
+    }
+
+    public Double getShareBenefit() {
+        return shareBenefit;
+    }
+
+    public void setShareBenefit(Double shareBenefit) {
+        this.shareBenefit = shareBenefit;
     }
 }

@@ -22,7 +22,12 @@ public class SysDeptServiceImpl implements SysDeptService {
 	public SysDeptEntity queryObject(Long deptId){
 		return sysDeptDao.queryObject(deptId);
 	}
-	
+
+	@Override
+	public SysDeptEntity queryObjectByPath(String path) {
+		return sysDeptDao.queryObjectByPath(path);
+	}
+
 	@Override
 	@DataFilter(tableAlias = "d", user = false)
 	public List<SysDeptEntity> queryList(Map<String, Object> map){
