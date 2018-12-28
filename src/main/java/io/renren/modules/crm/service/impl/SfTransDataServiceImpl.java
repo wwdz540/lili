@@ -5,6 +5,7 @@ import io.renren.modules.crm.dao.ITransDataDao;
 import io.renren.modules.crm.dao.SfTransDataDao;
 import io.renren.modules.crm.entity.TransDataEntity;
 import io.renren.modules.crm.service.ITransDataService;
+import io.renren.modules.crm.utils.TypeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,9 @@ public class SfTransDataServiceImpl extends AbtractTransDataServerImpl
         }
 
     }
-    protected void fixResult(TransDataEntity result){
+    protected void fixResult(TransDataEntity entity){
+        entity.setCardType(TypeUtils.cardType(entity.getCardType()));
+        entity.setIssuerCode(TypeUtils.payType(entity.getIssuerCode()));
     }
     protected ITransDataDao getDao(){
         return transDataDao;

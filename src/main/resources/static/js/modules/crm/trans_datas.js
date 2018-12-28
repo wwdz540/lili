@@ -88,11 +88,9 @@ var vm = new Vue({
 	data:{
 		q:{
 			merchName: "",
-            leaderName:"",
             ds:"fy",
             issuerCode:"",
-            cardType:"",
-            payMethod:""
+            payType:""
 		},
         amount:0,
         sharePoint:0,
@@ -108,7 +106,7 @@ var vm = new Vue({
 		},
 
         excel: function(){
-		    window.location.href=baseURL + "crm/td/excel?token="+token+"&dateStart="+vm.q.dateStart+"&dateEnd="+vm.q.dateEnd;
+		    window.location.href=baseURL + "crm/td/excel?ds="+vm.q.ds+"&token="+token+"&dateStart="+vm.q.dateStart+"&dateEnd="+vm.q.dateEnd;
         },
 	    reload: function () {
             console.log("=="+vm.q.ds);

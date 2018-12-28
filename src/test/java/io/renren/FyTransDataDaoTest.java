@@ -19,13 +19,6 @@ public class FyTransDataDaoTest {
 
     @Autowired
     private FyTransDataDao transDataDao;
-/*
-
-    @Autowired
-    @Qualifier("sfTransDataService")
-    private ITransDataService iTransDataService;
-*/
-
 
     @Autowired
     private Map<String,ITransDataService>  serviceMap;

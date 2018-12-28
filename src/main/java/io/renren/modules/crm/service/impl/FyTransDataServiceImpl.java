@@ -4,6 +4,7 @@ import io.renren.modules.crm.dao.FyTransDataDao;
 import io.renren.modules.crm.dao.ITransDataDao;
 import io.renren.modules.crm.entity.TransDataEntity;
 import io.renren.modules.crm.service.ITransDataService;
+import io.renren.modules.crm.utils.TypeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,10 @@ public class FyTransDataServiceImpl extends AbtractTransDataServerImpl
             params.remove(QUERY_PAY_TYPE);
             switch (payType){
                 case "微信":
-                    params.put("pay_type","1");
+                    params.put("issuerCode","1");
                     break;
                 case "支付宝":
-                    params.put("pay_type","2");
+                    params.put("issuerCode","2");
                     break;
                 case "借记卡":
                     params.put("cardType","01");
@@ -37,7 +38,9 @@ public class FyTransDataServiceImpl extends AbtractTransDataServerImpl
             }
         }
     }
-    protected void fixResult(TransDataEntity result){
+    protected void fixResult(TransDataEntity entity){
+        entity.setCardType(TypeUtils.fyCardType(entity.getCardType()));
+        entity.setIssuerCode(TypeUtils.fyPayType(entity.getIssuerCode()));
     }
     protected ITransDataDao getDao(){
         return fyTransDataDao;
@@ -49,7 +52,7 @@ public class FyTransDataServiceImpl extends AbtractTransDataServerImpl
         switch (field){
             case "amt":
                 return "total_fee";
-               // break;
+
         }
         throw new RuntimeException("没有做好映射");
     }
