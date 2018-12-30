@@ -142,10 +142,5 @@ public class MyTransDataController extends BaseController {
 
 
 
-    @Autowired
-    private Map<String,ITransDataService>  serviceMap;
-    public ITransDataService getService(Map<String,Object> params){
-        return serviceMap.get(params.get("ds")); //获取数据源，富友或盛富通的
-    }
 
 }

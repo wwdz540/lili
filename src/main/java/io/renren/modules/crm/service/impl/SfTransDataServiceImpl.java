@@ -1,6 +1,5 @@
 package io.renren.modules.crm.service.impl;
 
-import io.renren.modules.crm.dao.FyTransDataDao;
 import io.renren.modules.crm.dao.ITransDataDao;
 import io.renren.modules.crm.dao.SfTransDataDao;
 import io.renren.modules.crm.entity.TransDataEntity;
@@ -13,7 +12,7 @@ import java.util.Map;
 
 
 @Service("sf")
-public class SfTransDataServiceImpl extends AbtractTransDataServerImpl
+public class SfTransDataServiceImpl extends AbstractTransDataServerImpl
         implements ITransDataService {
     @Autowired
     private SfTransDataDao  transDataDao;

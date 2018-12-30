@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class AbtractTransDataServerImpl implements ITransDataService {
+public abstract class AbstractTransDataServerImpl implements ITransDataService {
 
     @Override
     public List<TransDataEntity> queryList(Map<String, Object> params) {
@@ -28,6 +28,7 @@ public abstract class AbtractTransDataServerImpl implements ITransDataService {
 
     @Override
     public GroupQuery createGroupQuery(final Map<String,Object> params) {
+        fixQueryParam(params);
         return new GroupQuery() {
 
             Map<String,String> fieldName = new HashMap<>();

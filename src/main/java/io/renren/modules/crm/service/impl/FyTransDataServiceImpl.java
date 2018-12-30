@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @Service("fy")
-public class FyTransDataServiceImpl extends AbtractTransDataServerImpl
+public class FyTransDataServiceImpl extends AbstractTransDataServerImpl
         implements ITransDataService {
     @Autowired
     private FyTransDataDao fyTransDataDao;
