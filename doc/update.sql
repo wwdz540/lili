@@ -26,7 +26,3 @@ CREATE TABLE rate_config
 );
 CREATE UNIQUE INDEX rate_config_dept_id_pay_type_uindex ON rate_config (dept_id, pay_type);
 ALTER TABLE rate_config COMMENT = '费率设置表';
-
-
-
-

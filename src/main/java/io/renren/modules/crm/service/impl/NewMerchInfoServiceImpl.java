@@ -1,6 +1,7 @@
 package io.renren.modules.crm.service.impl;
 
 import io.renren.common.exception.RRException;
+import io.renren.modules.crm.dao.MerchInfoDao;
 import io.renren.modules.crm.dao.NewMerchInfoDao;
 import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
@@ -18,12 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 @Component
 public class NewMerchInfoServiceImpl implements NewMerchInfoService {
 
     @Autowired
-    private MerchInfoService merchInfoService;
+    private MerchInfoDao merchInfoDao;
 
     @Autowired
     private SysDeptService deptService;
@@ -33,6 +35,9 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
 
     @Autowired
     private RateConfigService rateConfigService;
+
+
+
 
     @Override
     @Transactional
@@ -57,7 +62,7 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
            /*2.将部门id写到商户中**/
            merch.setDeptId(dept.getDeptId());
            /*3.添加商户*/
-           merchInfoService.save(merch);
+           merchInfoDao.save(merch);
        }
 
 
@@ -66,7 +71,7 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
     @Override
     public void update(NewMerchInfoEntity merchInfoEntity) {
 
-        merchInfoService.update(merchInfoEntity.getMerchInfo());
+        merchInfoDao.update(merchInfoEntity.getMerchInfo());
 
         SysDeptEntity dept = merchInfoEntity.getDept();
         fillPath(dept);

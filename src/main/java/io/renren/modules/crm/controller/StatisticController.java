@@ -4,10 +4,8 @@ import io.renren.common.utils.CommonUtil;
 import io.renren.common.utils.DateUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
-import io.renren.modules.crm.entity.TransDataEntity;
 import io.renren.modules.crm.service.ITransDataService;
 import io.renren.modules.crm.service.NewMerchInfoService;
-import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /***
  * @Author wangzhipig
@@ -65,52 +64,17 @@ public class StatisticController  extends BaseController {
 
         return R.ok().put("result",result);
     }
-/**
-    @RequestMapping("/list")
-    public R list(@RequestParam Map<String,Object> params){
-        fixParas(params);
-        DateUtils.fixQueryDate(params);
-        if(params.get("path")==null){
-            params.put("path",getCurrentPath());
-        }
 
-        String searchPath = params.get("path").toString();
-        int length = searchPath.length() + 11;
-
-        ITransDataService service = getService(params);
-
-        List<Map<String,Object>> list = service.createGroupQuery(params)
-                .collection4Amt("count","count")
-                .collection4Amt("sum","sum")
-                .collection4Amt("avg","avg")
-                .collection4Share("sum","sharePoint")
-                .group("left(path,"+length+")","path").query();
-        List<Map<String,Object>> result =list.stream().filter(s->{
-            SysDeptEntity dept =  deptService.queryObjectByPath(s.get("path").toString());
-            if(dept!=null)
-                s.put("name",dept.getName());
-            return dept!=null && dept.getDeptType()==2;
-        }).collect(Collectors.toList());
-        /**list.stream().filter(s->s!=null && s.get("path").toString().length()>= length ).forEach( s->{
-             SysDeptEntity dept =  deptService.queryObjectByPath(s.get("path").toString());
-             if(dept!=null)
-                s.put("name",dept.getName());
-        });
-
-        return R.ok().put("result",result);
-    }
-**/
     @RequestMapping("/summary")
     public R summaryByMonth(@RequestParam Map<String,Object> params){
         fixParas(params);
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
+
+
         List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
-        for(int i=0;i<month;i++){
-            Map<String,Object> summary = summaryByMonth(year,i,params);
+        monthOfYears().forEach(start ->{
+            Map<String,Object> summary = summaryByMonth(start.getYear(),start.getMonthValue(),params);
           result.add(summary);
-        }
+        });
         return R.ok().put("result",result);
     }
 
@@ -134,7 +98,7 @@ public class StatisticController  extends BaseController {
         summary.put("share-sum",CommonUtil.formatAB(summary.get("share-sum")));
         summary.put("share-avg",CommonUtil.formatAB(summary.get("share-avg")));
 
-        summary.put("month",month+"月");
+        summary.put("month",year+"-"+month+"月");
         return summary;
 
     }
@@ -147,21 +111,19 @@ public class StatisticController  extends BaseController {
     @RequestMapping("/summary4payType")
     private R summaryByMonth4PayType(@RequestParam Map<String,Object> params){
         fixParas(params);
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
+
         List<Map<String,String>> result = new ArrayList<Map<String,String>>();
         String[] payTypes=new String[]{"微信","支付宝","借记卡","贷记卡"};
-        Map<String,String> item;
-        for(int i=0;i<month;i++){
-            item = new HashMap<>();
-            item.put("month",i+"月");
+
+       monthOfYears().forEach(date ->{
+             Map<String,String> item = new HashMap<>();
+            item.put("month",date.getYear()+"-"+date.getMonthValue()+"月");
             for (String payType : payTypes) {
                 params.put(ITransDataService.QUERY_PAY_TYPE,payType);
-                item.put(payType,CommonUtil.formatAB(summaryByMonth2(year,i,params)));
+                item.put(payType,CommonUtil.formatAB(summaryByMonth2(date.getYear(),date.getMonthValue(),params)));
             }
             result.add(item);
-        }
+        });
         return R.ok().put("result",result);
     }
 
@@ -264,4 +226,13 @@ public class StatisticController  extends BaseController {
         data.put("amount",amountList);
         return R.ok().put("data",data);
     }
+
+    Stream<LocalDate> monthOfYears(){
+       return Stream
+                .iterate(LocalDate.now().plus(-12,ChronoUnit.MONTHS),
+                        i->i.plus(1,ChronoUnit.MONTHS))
+                .limit(12);
+    }
+
+
 }
