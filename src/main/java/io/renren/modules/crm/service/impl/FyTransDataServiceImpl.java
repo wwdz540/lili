@@ -21,7 +21,10 @@ public class FyTransDataServiceImpl extends AbstractTransDataServerImpl
     protected void fixQueryParam(Map<String, Object> params){
         if(params.containsKey(QUERY_PAY_TYPE)){
             String payType = params.get(QUERY_PAY_TYPE).toString();
+
             params.remove(QUERY_PAY_TYPE);
+            params.remove("issuerCode");
+            params.remove("cardType");
             switch (payType){
                 case "微信":
                     params.put("issuerCode","1");

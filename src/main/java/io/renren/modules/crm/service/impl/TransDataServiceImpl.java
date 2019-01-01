@@ -143,9 +143,8 @@ public class TransDataServiceImpl implements TransDataService{
 
             List<TransDataEntity> list = transDataDao.queryList(query);
 
-
             BigDecimal amount = BigDecimal.ZERO;
-            for (TransDataEntity entity: list){
+            for (TransDataEntity entity : list){
                 BigDecimal amt = new BigDecimal(entity.getAmt()).divide(BigDecimal.valueOf(100));
                 amount = amount.add(amt);
             }

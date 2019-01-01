@@ -35,6 +35,7 @@
 
     <select id="queryList" resultType="io.renren.modules.crm.entity.TransDataEntity">
         select t.id as id ,
+        t.ins_cd as order_Id,
         t.out_trade_no as trace_no  ,
         t.total_fee as amt,
         t.merchantno_fuiou as merchant_id,

@@ -11,9 +11,7 @@
             dept.parent_id =#{parentId}
             <if test="orDeptId != null">
                 or dept.dept_id = #{orDeptId}
-
             </if>
-
             )
         </if>
         <if test="deptType != null and deptType != 0">

@@ -3,18 +3,23 @@ package io.renren.modules.crm.controller;
 import io.renren.common.utils.CommonUtil;
 import io.renren.common.utils.DateUtils;
 import io.renren.common.utils.R;
+import io.renren.modules.crm.entity.NewMerchInfoEntity;
+import io.renren.modules.crm.entity.TransDataEntity;
 import io.renren.modules.crm.service.ITransDataService;
+import io.renren.modules.crm.service.NewMerchInfoService;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /***
  * @Author wangzhipig
@@ -26,6 +31,41 @@ public class StatisticController  extends BaseController {
     @Autowired
     private SysDeptService deptService;
 
+    @Autowired
+    private NewMerchInfoService merchInfoService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @RequestMapping("/list")
+    public R list(@RequestParam Map<String,Object> params){
+        fixParas(params);
+        DateUtils.fixQueryDate(params);
+        ITransDataService service = getService(params);
+
+        NewMerchInfoEntity merch = getCurrentMerch();
+        params.put("deptType",2);
+        List<NewMerchInfoEntity> list = merchInfoService.queryList(params);
+        List<Map<String,Object>> result = new ArrayList<>();
+        params.remove("deptType");
+        for (NewMerchInfoEntity m : list) {
+            params.put("path",m.getPath());
+            Map<String,Object> item = new HashMap<>();
+            item.put("name",m.getName());
+
+            Map<String, Object> summary = service.createGroupQuery(params)
+                    .collection4Amt("count", "count")
+                    .collection4Amt("sum", "sum")
+                    .collection4Amt("avg", "avg")
+                    .collection4Share("sum", "sharePoint")
+                    .querySingleMap();
+            item.putAll(summary);
+            result.add(item);
+        }
+
+        return R.ok().put("result",result);
+    }
+/**
     @RequestMapping("/list")
     public R list(@RequestParam Map<String,Object> params){
         fixParas(params);
@@ -38,21 +78,28 @@ public class StatisticController  extends BaseController {
         int length = searchPath.length() + 11;
 
         ITransDataService service = getService(params);
+
         List<Map<String,Object>> list = service.createGroupQuery(params)
-                .collection("count","1","count")
+                .collection4Amt("count","count")
                 .collection4Amt("sum","sum")
                 .collection4Amt("avg","avg")
                 .collection4Share("sum","sharePoint")
                 .group("left(path,"+length+")","path").query();
-        list.stream().filter(s->s!=null).forEach( s->{
+        List<Map<String,Object>> result =list.stream().filter(s->{
+            SysDeptEntity dept =  deptService.queryObjectByPath(s.get("path").toString());
+            if(dept!=null)
+                s.put("name",dept.getName());
+            return dept!=null && dept.getDeptType()==2;
+        }).collect(Collectors.toList());
+        /**list.stream().filter(s->s!=null && s.get("path").toString().length()>= length ).forEach( s->{
              SysDeptEntity dept =  deptService.queryObjectByPath(s.get("path").toString());
              if(dept!=null)
                 s.put("name",dept.getName());
         });
 
-        return R.ok().put("result",list);
+        return R.ok().put("result",result);
     }
-
+**/
     @RequestMapping("/summary")
     public R summaryByMonth(@RequestParam Map<String,Object> params){
         fixParas(params);
@@ -92,103 +139,129 @@ public class StatisticController  extends BaseController {
 
     }
 
-   /* private static final String GREP_SQL = "select  %s from sys_dept as dept\n" +
-            "  left join merch_info  as m on m.dept_id = dept.dept_id\n" +
-            "  left join trans_data as td   on td.merchantId = m.merchno \n" +
-            " where %s \n"
-            ;
-
-    //private static final
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    NewMerchInfoService merchInfoService;
-
-    @RequestMapping("/list")
-    public List list(){
-        return query("count(td.amt) as count,sum(td.amt)/100 as sum ,avg(td.amt)/100 as avg");
-    }
-
-
-
-
-
-
-    private List query(String groupField){
-
-        String agencyGroup = getSql("dept.parent_id, (select d.name from sys_dept as d where d.dept_id= dept.parent_id) as name, 2 as dtype ,"+ groupField,
-                "dept.dept_type=4 or dept.dept_type=5",
-                "dept.parent_id");
-        System.out.println(agencyGroup);
-        List<Map<String, Object>> list2 = jdbcTemplate.query(agencyGroup, new MyColumnMapRowMapper());
-        return  list2;
-    }
-
-    private String getSql(String fields,String where,String group){
-        String result = String.format(GREP_SQL,fields,where);
-        if(StringUtils.isNotBlank(group)){
-            result += "  group by "+group;
-        }
-        return  result;
-    }
-
-
-    protected static class MyColumnMapRowMapper implements RowMapper<Map<String, Object>> {
-
-        @Override
-        public Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnCount = rsmd.getColumnCount();
-            Map<String, Object> mapOfColValues = createColumnMap(columnCount);
-            for (int i = 1; i <= columnCount; i++) {
-                String key = getColumnKey(JdbcUtils.lookupColumnName(rsmd, i));
-                Object obj = getColumnValue(rs, i);
-
-               // System.out.println(obj.getClass());
-
-                mapOfColValues.put(key, obj);
+    /***
+     * 支付方式统计
+     * @param params
+     * @return
+     */
+    @RequestMapping("/summary4payType")
+    private R summaryByMonth4PayType(@RequestParam Map<String,Object> params){
+        fixParas(params);
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        List<Map<String,String>> result = new ArrayList<Map<String,String>>();
+        String[] payTypes=new String[]{"微信","支付宝","借记卡","贷记卡"};
+        Map<String,String> item;
+        for(int i=0;i<month;i++){
+            item = new HashMap<>();
+            item.put("month",i+"月");
+            for (String payType : payTypes) {
+                params.put(ITransDataService.QUERY_PAY_TYPE,payType);
+                item.put(payType,CommonUtil.formatAB(summaryByMonth2(year,i,params)));
             }
-            return mapOfColValues;
+            result.add(item);
+        }
+        return R.ok().put("result",result);
+    }
+
+    private Object summaryByMonth2(int year,int month,
+                                               Map<String,Object> params){
+        ITransDataService service = getService(params);
+
+        params.put("dateStart",year+"-"+month+"-"+"1");
+        params.put("dateEnd",year+"-"+month+"-"+"31 23:59:59");
+       return service.createGroupQuery(params)
+               .collection4Amt("sum","sum")
+                .querySingleObject();
+    }
+
+    /**首页数据显示*/
+    @RequestMapping("/countTransData")
+    public R countTransData(@RequestParam Map<String,Object> params) {
+        fixParas(params);
+        ITransDataService service = getService(params);
+        NewMerchInfoEntity crtMerch = getCurrentMerch();
+
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String endDate = df.format(cal.getTime());
+        cal.add(Calendar.DATE,-1);
+        String startDate =  df.format(cal.getTime());
+        params.put("dateStart",startDate);
+        params.put("dateEnd",endDate);
+        DateUtils.fixQueryDate(params);
+
+
+        ITransDataService.GroupQuery groupQuery = service
+                .createGroupQuery(params)
+                .collection4Amt("count", "count")
+                .collection4Amt("sum", "amt-sum")
+                .collection4Amt("avg", "amt-avg");
+        if(crtMerch.getDeptType()==2 || crtMerch.getDeptType()==0){
+           groupQuery.collection4Share("sum","share-sum")
+                    .collection4Share("avg","share-avg");
+        }
+       Map<String,Object> summary = groupQuery.querySingleMap();
+
+//        Map<String,Object> data = new HashMap<>();
+//        data.put("amount",amount);
+//        data.put("sharePoint",sharePoint);
+//        data.put("count",list.size());
+//        data.put("num",merchTotal+"/"+terminalTotal);
+        String path = params.get("path")==null ? "00000000":params.get("path").toString();
+        String merchCountSql="select count(1) from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id\n" +
+                "        where dept.del_flag=0  and dept.path like '"+path+"%' and dept.dept_type in(1,3,5)";
+
+        int merchTotal = jdbcTemplate.queryForObject(merchCountSql,Integer.class);
+
+        String terminalCountSql ="select count(1) from terminal t\n" +
+                "LEFT JOIN merch_info m ON t.merch_id = m.id" +
+                " Left JOIN sys_dept as dept on dept.dept_id = m.dept_id and dept.path like '"+path+"%'";
+        int terminalTotal = jdbcTemplate.queryForObject(terminalCountSql,Integer.class);
+
+        Map<String,Object> data = new HashMap<>();
+
+        data.put("amount",CommonUtil.formatAB(summary.get("amt-sum")));
+        data.put("sharePoint",CommonUtil.formatAB(summary.get("share-sum")));
+        data.put("count",summary.get("count"));
+        data.put("num",merchTotal+"/"+terminalTotal);
+       return R.ok().put("data",data);
+    }
+
+    @RequestMapping("/transData")
+    public R transData(@RequestParam Map<String,Object> params) {
+        fixParas(params);
+        ITransDataService service = getService(params);
+        Map<String,Object> data = new HashMap<>();
+
+        List<String> timeList = new ArrayList<>();
+        List<String> amountList = new ArrayList<>();
+
+      //  Map<String,Object> query = new HashMap<>();
+        //fixParas(query);
+
+        Date date = new Date();
+        for (int i = 7 ; i >= 1; i --){
+            Date currTime = DateUtils.getNextSomeDay(date, i);
+            Date dateStart = DateUtils.getStartTime(currTime);
+            Date dateEnd = DateUtils.getnowEndTime(currTime);
+
+
+            params.put("dateStart",dateStart);
+            params.put("dateEnd",dateEnd);
+            Object amount = service.
+                    createGroupQuery(params)
+                    .collection4Amt("sum","amount")
+                    .querySingleObject();
+
+
+            timeList.add(DateUtils.format(currTime, DateUtils.DATE_PATTERN));
+            amountList.add(CommonUtil.formatAB(amount));
         }
 
-        *//**
-         * Create a Map instance to be used as column map.
-         * <p>By default, a linked case-insensitive Map will be created.
-         * @param columnCount the column count, to be used as initial
-         * capacity for the Map
-         * @return the new Map instance
-         * @see org.springframework.util.LinkedCaseInsensitiveMap
-         *//*
-        protected Map<String, Object> createColumnMap(int columnCount) {
-            return new LinkedCaseInsensitiveMap<Object>(columnCount);
-        }
-
-        *//**
-         * Determine the key to use for the given column in the column Map.
-         * @param columnName the column name as returned by the ResultSet
-         * @return the column key to use
-         * @see java.sql.ResultSetMetaData#getColumnName
-         *//*
-        protected String getColumnKey(String columnName) {
-            return columnName;
-        }
-
-        *//**
-         * Retrieve a JDBC object value for the specified column.
-         * <p>The default implementation uses the {@code getObject} method.
-         * Additionally, this implementation includes a "hack" to get around Oracle
-         * returning a non standard object for their TIMESTAMP datatype.
-         * @param rs is the ResultSet holding the data
-         * @param index is the column index
-         * @return the Object returned
-         * @see org.springframework.jdbc.support.JdbcUtils#getResultSetValue
-         *//*
-        protected Object getColumnValue(ResultSet rs, int index) throws SQLException {
-            return JdbcUtils.getResultSetValue(rs, index);
-        }
-
-    }*/
-
+        data.put("transTime",timeList);
+        data.put("amount",amountList);
+        return R.ok().put("data",data);
+    }
 }

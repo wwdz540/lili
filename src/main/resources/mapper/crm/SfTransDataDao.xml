@@ -28,7 +28,6 @@
         <if test="cardType != null and cardType != ''">
             and t.cardType = #{cardType}
         </if>
-
     </sql>
     <sql id="join_table">
         trans_data t
@@ -63,7 +62,8 @@
         <if test="gfield !=null and gfield !=''">
         ${gfield},
         </if>
-        ${collection} from
+        ${collection}
+        from
         <include refid="join_table"/>
         where
         <include refid="cnd" />

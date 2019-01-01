@@ -53,13 +53,13 @@ public class SysUserServiceImpl implements SysUserService {
 	}
 
 	@Override
-	@DataFilter(tableAlias = "u", user = false)
+	@DataFilter(tableAlias = "d", user = false)
 	public List<SysUserEntity> queryList(Map<String, Object> map){
 		return sysUserDao.queryList(map);
 	}
 	
 	@Override
-	@DataFilter(tableAlias = "u", user = false)
+	@DataFilter(tableAlias = "d", user = false)
 	public int queryTotal(Map<String, Object> map) {
 		return sysUserDao.queryTotal(map);
 	}

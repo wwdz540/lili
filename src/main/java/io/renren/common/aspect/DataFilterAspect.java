@@ -4,6 +4,7 @@ import io.renren.common.annotation.DataFilter;
 import io.renren.common.exception.RRException;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.ShiroUtils;
+import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +61,7 @@ public class DataFilterAspect {
      * 获取数据过滤的SQL
      */
     private String getFilterSQL(SysUserEntity user, JoinPoint point){
+
         MethodSignature signature = (MethodSignature) point.getSignature();
 
         Method method=((MethodSignature)point.getSignature()).getMethod();
@@ -70,6 +72,7 @@ public class DataFilterAspect {
         }catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+        SysDeptEntity curDept = sysDeptService.queryObject(user.getDeptId());
 
         DataFilter dataFilter = realMethod.getAnnotation(DataFilter.class);
 
@@ -83,9 +86,8 @@ public class DataFilterAspect {
         //获取子部门ID
         //String subDeptIds = sysDeptService.getSubDeptIdList(user.getDeptId());
         StringBuilder filterSql = new StringBuilder();
-        filterSql.append(tableAlias).append("dept_id = " + user.getDeptId()+" ")
-                .append(" or ")
-                .append(tableAlias).append("dept_Id in (select dept_id from sys_dept where parent_Id ="+user.getDeptId()+")");
+        filterSql.append(" and ");
+        filterSql.append(tableAlias).append("path like '"+curDept.getPath()+"%'");
 
 
 //        StringBuilder filterSql = new StringBuilder();
