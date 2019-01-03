@@ -13,7 +13,10 @@ import java.util.List;
 public class NewMerchInfoEntity {
 
     private Long id;
+
     private Long merchId;
+
+
     private String merchno;
 
     @NotEmpty(message="商铺名不能为空")

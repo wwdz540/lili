@@ -1,4 +1,6 @@
 $(function () {
+
+
     $("#jqGrid").jqGrid({
         url: baseURL + 'crm/newmerchInfo/list',
         datatype: "json",
@@ -6,14 +8,11 @@ $(function () {
             { label: '商户ID', name: 'id', index: "id", width: 40, key: true },
             { label: '商户名称', name: 'name', width: 75,formatter:function (v,o,merch) {
 					return v + "&nbsp&nbsp;<span style='color: #00a7d0'>["+mtype[merch.deptType]+"]</span>";
-                } },
-
+                }},
 			{ label: '商户编号', name: 'merchno', width: 75},
             { label: '盛大商户编号', name: 'merchnoSub', width: 45 },
             { label: '父商户名称', name: 'parentName', width: 45 },
              { label: '客户姓名', name: 'legalName', width: 45 },
-            // { label: '手机号码', name: 'mobile', width: 45 },
-            // { label: '商户类型', name: 'industry', width: 45 },
 			{ label: '地址', name: 'address', index: "address", width: 100},
 			{ label: '操作',name:'id',width: 45,formatter:function (v,o,merch) {
 					var opStr ="";
@@ -87,7 +86,9 @@ var vm = new Vue({
 			id:0,
             deptType:null,
             parentId:0,
-			rateConfigs:this.defaultRate
+			rateConfigs:this.defaultRate,
+            parentType : userInfo.deptType,
+			parentId : userInfo.deptId
 		}
 	},
     created: function () {
@@ -110,9 +111,14 @@ var vm = new Vue({
 			vm.q.keyword="";
 			//vm.q.parentId = parentId;
 			vm.q.path = path;
-            vm.reload();
+
+            $("#jqGrid").jqGrid('setGridParam',{
+                postData:vm.q,
+                page:0
+            }).trigger("reloadGrid");
 		},
 		add: function(){
+            vm.addChild(userInfo.deptId,userInfo.deptType,userInfo.deptName);
 			vm.showList = false;
 			vm.title = "新增";
 			vm.reInit();
@@ -239,3 +245,4 @@ var vm = new Vue({
         }
 	}
 });
+

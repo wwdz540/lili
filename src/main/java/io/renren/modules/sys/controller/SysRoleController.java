@@ -1,12 +1,10 @@
 package io.renren.modules.sys.controller;
 
 import io.renren.common.annotation.SysLog;
-import io.renren.common.utils.Constant;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.Query;
-import io.renren.common.utils.R;
+import io.renren.common.utils.*;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.modules.sys.entity.SysRoleEntity;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysRoleDeptService;
 import io.renren.modules.sys.service.SysRoleMenuService;
 import io.renren.modules.sys.service.SysRoleService;
@@ -64,21 +62,16 @@ public class SysRoleController extends AbstractController {
 	@RequiresPermissions("sys:role:select")
 	public R select(){
 		Map<String, Object> map = new HashMap<>();
+		SysUserEntity user = ShiroUtils.getUserEntity();
 
+		map.put("filterSql",
+				" and r.role_id in (select role_id from  sys_user_role where user_id = "
+						+ user.getUserId()+")");
 
 		List<SysRoleEntity> list = sysRoleService.queryList(map);
 		//如果不是超级管理员，则只查询自己所拥有的角色列表
-		List<SysRoleEntity> result = new ArrayList<>();
-		if(getUserId() != Constant.SUPER_ADMIN){
-			for (SysRoleEntity entity: list){
-				if ("二级代理".equals(entity.getRoleName())){
-					result.add(entity);
-				}
-			}
-		}else{
-			result.addAll(list);
-		}
-		return R.ok().put("list", result);
+
+		return R.ok().put("list", list);
 	}
 	
 	/**

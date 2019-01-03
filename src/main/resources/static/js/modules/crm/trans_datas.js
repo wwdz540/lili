@@ -1,27 +1,34 @@
 $(function () {
 
+    var col =  [
+        { label: 'ID', name: 'id', width: 35 },
+        { label: '订单号', name: 'orderId', width: 40},
+        { label: '终端流水号', name: 'traceNo', width: 40 },
+        { label: '金额', name: 'amt', width: 40 },
+        { label: '分润', name: 'sharePoint', width: 40 },
+        { label: '商户号', name: 'merchantId', width: 55 },
+        { label: '商户名称', name: 'merchName', width: 55 },
+        { label: '交易时间', name: 'txnDatetime', width: 55 },
+        { label: '交易参考号', name: 'txnRef', width: 40 },
+        { label: '终端号', name: 'terminalId', width: 40 },
+        { label: '卡号末4位', name: 'shortPan', width: 30 },
+        { label: '交易状态', name: 'respCode', width: 40 },
+        { label: '发卡机构', name: 'issuerCode', width: 30 },
+        { label: '卡类型', name: 'cardType', width: 30},
+        { label: '客单价', name: 'cardType', width: 40,formatter:fmtFun}
+
+    ];
+    if(!(userInfo.deptType == 0 || userInfo == 1)){ //商户没有分润
+        col = col.filter(function (value) {
+            return value.label != '分润';
+        })
+    }
+
     $("#jqGrid").jqGrid({
         url: baseURL + 'crm/td/list',
         datatype: "json",
         postData:vm.q,
-        colModel: [
-            { label: 'ID', name: 'id', width: 35 },
-			{ label: '订单号', name: 'orderId', width: 40},
-            { label: '终端流水号', name: 'traceNo', width: 40 },
-			{ label: '金额', name: 'amt', width: 40 },
-            { label: '分润', name: 'sharePoint', width: 40 },
-            { label: '商户号', name: 'merchantId', width: 55 },
-            { label: '商户名称', name: 'merchName', width: 55 },
-            { label: '交易时间', name: 'txnDatetime', width: 55 },
-            { label: '交易参考号', name: 'txnRef', width: 40 },
-			{ label: '终端号', name: 'terminalId', width: 40 },
-            { label: '卡号末4位', name: 'shortPan', width: 30 },
-            { label: '交易状态', name: 'respCode', width: 40 },
-            { label: '发卡机构', name: 'issuerCode', width: 30 },
-            { label: '卡类型', name: 'cardType', width: 30},
-            { label: '客单价', name: 'cardType', width: 30,formatter:fmtFun}
-
-        ],
+        colModel: col,
 		viewrecords: true,
         height: 385,
         rowNum: 10,

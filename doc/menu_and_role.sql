@@ -1,4 +1,5 @@
 
+
 delete from  sys_user_role where user_id=300;
 delete from sys_user where user_id=300;
 delete from sys_role_menu where role_id in( 10,11);

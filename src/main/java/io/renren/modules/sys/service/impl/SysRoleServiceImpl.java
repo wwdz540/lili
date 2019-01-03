@@ -37,13 +37,13 @@ public class SysRoleServiceImpl implements SysRoleService {
 	}
 
 	@Override
-	@DataFilter(tableAlias = "r", user = false)
+//	@DataFilter(tableAlias = "r", user = false)
 	public List<SysRoleEntity> queryList(Map<String, Object> map) {
 		return sysRoleDao.queryList(map);
 	}
 
 	@Override
-	@DataFilter(tableAlias = "r", user = false)
+//	@DataFilter(tableAlias = "r", user = false)
 	public int queryTotal(Map<String, Object> map) {
 		return sysRoleDao.queryTotal(map);
 	}

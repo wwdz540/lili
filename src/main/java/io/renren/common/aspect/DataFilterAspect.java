@@ -90,15 +90,6 @@ public class DataFilterAspect {
         filterSql.append(tableAlias).append("path like '"+curDept.getPath()+"%'");
 
 
-//        StringBuilder filterSql = new StringBuilder();
-//        filterSql.append("and (");
-//        filterSql.append(tableAlias).append("dept_id in(").append(subDeptIds).append(")");
-//
-//        //没有本部门数据权限，也能查询本人数据
-//        if(dataFilter.user()){
-//            filterSql.append(" or ").append(tableAlias).append("user_id=").append(user.getUserId());
-//        }
-//        filterSql.append(")");
 
         return filterSql.toString();
     }

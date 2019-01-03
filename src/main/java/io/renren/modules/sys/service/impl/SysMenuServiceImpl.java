@@ -57,7 +57,9 @@ public class SysMenuServiceImpl implements SysMenuService {
 		
 		//用户菜单列表
 		List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
-		return getAllMenuList(menuIdList);
+
+		List<SysMenuEntity> allMenuList = getAllMenuList(menuIdList);
+		return allMenuList;
 	}
 	
 	@Override
@@ -102,6 +104,14 @@ public class SysMenuServiceImpl implements SysMenuService {
 	private List<SysMenuEntity> getAllMenuList(List<Long> menuIdList){
 		//查询根菜单列表
 		List<SysMenuEntity> menuList = queryListParentId(0L, menuIdList);
+
+		menuList.forEach( m ->{
+			System.out.println(m.getMenuId());
+			System.out.println(m.getName());
+			System.out.println(m.getType());
+			System.out.println(MenuType.CATALOG.getValue()==m.getType());
+		});
+
 		//递归获取子菜单
 		getMenuTreeList(menuList, menuIdList);
 		

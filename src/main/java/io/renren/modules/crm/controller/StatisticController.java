@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /***
@@ -68,13 +69,10 @@ public class StatisticController  extends BaseController {
     @RequestMapping("/summary")
     public R summaryByMonth(@RequestParam Map<String,Object> params){
         fixParas(params);
-
-
-        List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
-        monthOfYears().forEach(start ->{
-            Map<String,Object> summary = summaryByMonth(start.getYear(),start.getMonthValue(),params);
-          result.add(summary);
-        });
+        List<Map<String,Object>> result =
+        monthOfYears()
+                .map(start -> summaryByMonth(start.getYear(),start.getMonthValue(),params))
+                .collect(Collectors.toList());
         return R.ok().put("result",result);
     }
 
@@ -112,18 +110,18 @@ public class StatisticController  extends BaseController {
     private R summaryByMonth4PayType(@RequestParam Map<String,Object> params){
         fixParas(params);
 
-        List<Map<String,String>> result = new ArrayList<Map<String,String>>();
+
         String[] payTypes=new String[]{"微信","支付宝","借记卡","贷记卡"};
 
-       monthOfYears().forEach(date ->{
+        List<Map<String,String>> result = monthOfYears().map(date ->{
              Map<String,String> item = new HashMap<>();
             item.put("month",date.getYear()+"-"+date.getMonthValue()+"月");
             for (String payType : payTypes) {
                 params.put(ITransDataService.QUERY_PAY_TYPE,payType);
                 item.put(payType,CommonUtil.formatAB(summaryByMonth2(date.getYear(),date.getMonthValue(),params)));
             }
-            result.add(item);
-        });
+           return item;
+        }).collect(Collectors.toList());
         return R.ok().put("result",result);
     }
 

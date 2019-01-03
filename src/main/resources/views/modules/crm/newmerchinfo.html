@@ -58,7 +58,7 @@
     <div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
-			<template v-if="merch.parentId == 1 &&  merch.id == null">
+			<template v-if="merch.parentType == 0 || merch.parentType == 2 || merch.parentType == 3 ">
 			<div class="form-group">
 				<div class="col-sm-2 control-label">类别</div>
 				<div class="col-sm-10">
@@ -67,16 +67,16 @@
 					<label class="radio-inline">
 						<input type="radio" v-model="merch.deptType" value="1"> 商户
 					</label>
-					<label class="radio-inline">
-						<input type="radio" v-model="merch.deptType" value="2"> 代理商
+					<label class="radio-inline" v-if="merch.parentType == 0">
+						<input type="radio"  v-model="merch.deptType" value="2"> 代理商
 					</label>
-					<label class="radio-inline">
+					<label class="radio-inline"  v-if="merch.parentType == 0 || merch.parentType == 2">
 						<input type="radio" v-model="merch.deptType" value="3"> 集团公司
 					</label>
 				</div>
 			</div>
 			</template>
-			<template v-else-if="merch.parentType==2">
+			<!--<template v-else-if="merch.parentType==2">
 				<div class="form-group">
 					<div class="col-sm-2 control-label">类别</div>
 					<div class="col-sm-10">
@@ -88,7 +88,7 @@
 						</label>
 					</div>
 				</div>
-			</template>
+			</template>-->
 
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">商户编号</div>

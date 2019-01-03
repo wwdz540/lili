@@ -1,6 +1,7 @@
 package io.renren.modules.crm.controller;
 
 
+import io.renren.common.exception.RRException;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
@@ -24,7 +25,8 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/crm/newmerchInfo")
-public class NewMerchInfoController {
+public class NewMerchInfoController extends BaseController {
+
 
     @Autowired
     NewMerchInfoService service ;
@@ -58,6 +60,45 @@ public class NewMerchInfoController {
     @RequestMapping("/save")
     public R save(@RequestBody NewMerchInfoEntity entity){
         ValidatorUtils.validateEntity(entity);
+       //{0:"平台",1:"商户",2:"代理商",3:"集团公司",4:"代理子帐户",5:"集团公司子帐户"};
+        NewMerchInfoEntity userMerch = getCurrentMerch();
+        NewMerchInfoEntity parent =service.findOne(entity.getParentId());
+        if(userMerch.getId() != 1){ //如果不是顶级商户的话
+            // parent =service.findOne(entity.getParentId());
+            if(!parent.getPath().startsWith(userMerch.getPath())){ //表明他不是要添加到其底下子商户中
+                entity.setParentId(userMerch.getId());
+                parent = userMerch;
+            }
+
+        }
+
+       // System.out.println("deptType"+entity.getDeptType());
+            switch (parent.getDeptType()){
+                case 0:
+                        if(!(entity.getDeptType()==1||
+                                        entity.getDeptType()==2||
+                                        entity.getDeptType()==3)){
+                            System.err.println("参数不正确");
+                            entity.setDeptType(1);
+                        }
+                        break;
+                case 2:
+                    if(!(entity.getDeptType()==3||
+                            entity.getDeptType()==4)){
+                        System.err.println("参数不正确");
+                        entity.setDeptType(4); //设为代理子账户
+                    }
+                    break;
+                case 3:
+                    if(!(entity.getDeptType()==5)){
+                        System.err.println("参数不正确");
+                        entity.setDeptType(5);
+                    }
+                    break;
+                 default:
+                     throw new RRException("当前商户不可以添加子商户");
+            }
+
         service.save(entity);
         return R.ok();
     }

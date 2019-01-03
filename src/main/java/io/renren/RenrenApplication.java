@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class RenrenApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
+		//javax.servlet.ServletContext con;
 		SpringApplication.run(RenrenApplication.class, args);
 	}
 
