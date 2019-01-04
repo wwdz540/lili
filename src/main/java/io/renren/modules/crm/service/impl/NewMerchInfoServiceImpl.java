@@ -47,6 +47,7 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
         /*1.添加部门**/
 
         deptService.save(dept);
+
         fillPath(dept);
         deptService.update(dept);
 
@@ -71,16 +72,21 @@ public class NewMerchInfoServiceImpl implements NewMerchInfoService {
     @Override
     public void update(NewMerchInfoEntity merchInfoEntity) {
 
-        merchInfoDao.update(merchInfoEntity.getMerchInfo());
+        MerchInfoEntity merch = merchInfoEntity.getMerchInfo();
+        if(merch.getId() !=null ) {
+            merchInfoDao.update(merch);
+        }else{
+            merchInfoDao.save(merch);
+        }
 
         SysDeptEntity dept = merchInfoEntity.getDept();
         fillPath(dept);
 
-        System.out.println("================");
-        System.out.println(dept.getPath());
-
         deptService.update(dept);
+        //merchInfoEntity.getRateConfigs().forEach(System.out::println);
+
         for (RateConfig rateConfig : merchInfoEntity.getRateConfigs()) {
+            rateConfig.setDeptId(dept.getDeptId());
             rateConfigService.saveOrUpdate(rateConfig);
         }
     }

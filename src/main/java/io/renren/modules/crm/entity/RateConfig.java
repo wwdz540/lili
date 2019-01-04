@@ -56,4 +56,16 @@ public class RateConfig {
     public void setShareBenefit(float shareBenefit) {
         this.shareBenefit = shareBenefit;
     }
+
+    @Override
+    public String toString() {
+        return "RateConfig{" +
+                "id=" + id +
+                ", deptId=" + deptId +
+                ", payType='" + payType + '\'' +
+                ", rate=" + rate +
+                ", max=" + max +
+                ", shareBenefit=" + shareBenefit +
+                '}';
+    }
 }

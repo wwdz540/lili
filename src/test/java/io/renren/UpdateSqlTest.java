@@ -1,5 +1,6 @@
 package io.renren;
 
+import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
 import io.renren.modules.crm.service.MerchInfoService;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
@@ -37,8 +39,50 @@ public class UpdateSqlTest {
     @Autowired
     NewMerchInfoService newMerchInfoService;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     /****/
     private WeakHashMap<Long,String> parenId2Path;
+
+
+    @Test
+    public void updateData(){
+        jdbcTemplate.execute("delete from sys_dept where dept_id <> 1");
+        List<Long> agenIds = jdbcTemplate.queryForList("select user_id from merch_info group by user_id",Long.class);//得到代理商ids
+        agenIds.remove(1l);
+
+        for (Long agenId : agenIds) {
+
+           SysUserEntity agen = userDao.findOne(agenId);
+
+            SysDeptEntity dept = new SysDeptEntity();
+            dept.setParentId(1l);
+            dept.setName(agen.getUsername());
+            dept.setDeptType(2);
+            dept.setAddress("");
+            dept.setIndustry("");
+            dept.setLegalName("");
+
+
+            sysDeptService.save(dept);
+
+            jdbcTemplate.execute("update sys_user set dept_id = "+dept.getDeptId() +" where user_id = "+agenId);
+
+
+            update(dept.getDeptId(),4,agen);
+
+
+        }
+        SysUserEntity u = new SysUserEntity();
+        u.setUserId(1l);
+        update(1l,1,u);
+
+        updatePath();
+        jdbcTemplate.execute("update sys_user as u set u.dept_id = (select min( m.dept_id) from  merch_info m where m.merchno =u.username )\n" +
+                "where u.dept_id = 10");
+
+    }
 
     @Test
     public void test2(){
@@ -50,6 +94,8 @@ public class UpdateSqlTest {
         waIds.add(4l);
         waIds.add(5l);
         waIds.add(7l);
+        waIds.add(8l);
+
         waIds.add(205l);
 
        List<SysUserEntity> list =  userService.findAll();
