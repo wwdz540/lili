@@ -175,7 +175,7 @@ var vm = new Vue({
                 type: 1,
                 offset: '50px',
                 skin: 'layui-layer-molv',
-                title: "选择部门",
+                title: "选择商户",
                 area: ['300px', '450px'],
                 shade: 0,
                 shadeClose: false,
