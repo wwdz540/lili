@@ -6,13 +6,13 @@
     <insert id="save" parameterType="io.renren.modules.crm.entity.RateConfig" >
       insert into rate_config
       (
-      `dept_id`,
+      `mc_id`,
       `pay_type`,
       `rate`,
       `max`,
       `share_benefit`
       )
-      values(#{deptId},#{payType},#{rate},#{max},#{shareBenefit});
+      values(#{mcId},#{payType},#{rate},#{max},#{shareBenefit});
     </insert>
 
     <update id="update" parameterType="io.renren.modules.crm.entity.RateConfig">
@@ -22,13 +22,13 @@
             `max` = #{max},
             `share_benefit` = #{shareBenefit}
         </set>
-        where `dept_id` = #{deptId} and `pay_type` = #{payType}
+        where `mc_id` = #{mcId} and `pay_type` = #{payType}
     </update>
     <select id="get" resultType="io.renren.modules.crm.entity.RateConfig">
-        SELECT * FROM rate_config   where `dept_id` = #{deptId} and `pay_type` = #{payType}
+        SELECT * FROM rate_config   where `mc_id` = #{mcId} and `pay_type` = #{payType}
     </select>
 
     <select id="findByDept" resultType="io.renren.modules.crm.entity.RateConfig">
-         SELECT * FROM rate_config   where `dept_id` = #{deptId}
+         SELECT * FROM rate_config   where `mc_id` = #{mcId}
     </select>
 </mapper>

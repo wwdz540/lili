@@ -2,7 +2,7 @@ package io.renren.modules.crm.entity;
 
 public class RateConfig {
     private Long id;
-    private Long deptId;
+    private Long mcId;
     private String payType;
     private float rate;
     private float max;
@@ -17,12 +17,12 @@ public class RateConfig {
         this.id = id;
     }
 
-    public Long getDeptId() {
-        return deptId;
+    public Long getMcId() {
+        return mcId;
     }
 
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
+    public void setMcId(Long mcId) {
+        this.mcId = mcId;
     }
 
     public String getPayType() {
@@ -61,7 +61,7 @@ public class RateConfig {
     public String toString() {
         return "RateConfig{" +
                 "id=" + id +
-                ", deptId=" + deptId +
+                ", mcId=" + mcId +
                 ", payType='" + payType + '\'' +
                 ", rate=" + rate +
                 ", max=" + max +

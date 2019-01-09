@@ -4,16 +4,16 @@
 <mapper namespace="io.renren.modules.sys.dao.SysDeptDao">
 
 	<select id="queryObject" resultType="io.renren.modules.sys.entity.SysDeptEntity">
-		select * from sys_dept where dept_id = #{value} and del_flag = 0
+		select * from merchant_main where mc_id = #{value} and del_flag = 0
 	</select>
 
 	<select id="queryObjectByPath" resultType="io.renren.modules.sys.entity.SysDeptEntity">
-		select * from sys_dept where path = #{value} and del_flag = 0
+		select * from merchant_main where path = #{value} and del_flag = 0
 	</select>
 
 	<select id="queryList" resultType="io.renren.modules.sys.entity.SysDeptEntity">
-		select d.*,(select p.name from sys_dept p where p.dept_id = d.parent_id) as parentName
-		from sys_dept d where d.del_flag = 0
+		select d.*,(select p.name from merchant_main p where p.mc_id = d.parent_id) as parentName
+		from merchant_main d where d.del_flag = 0
 		<!--  数据过滤  -->
 		${filterSql}
         <choose>
@@ -29,8 +29,8 @@
 		</if>
 	</select>
 
-	<insert id="save" parameterType="io.renren.modules.sys.entity.SysDeptEntity" useGeneratedKeys="true" keyProperty="deptId">
-		insert into sys_dept
+	<insert id="save" parameterType="io.renren.modules.sys.entity.SysDeptEntity" useGeneratedKeys="true" keyProperty="mcId">
+		insert into merchant_main
 		(
 			`parent_id`, 
 			`name`, 
@@ -58,9 +58,9 @@
 
 	<!--新增的一个添加方未能-->
 	<insert id="saveNew" parameterType="io.renren.modules.sys.entity.SysDeptEntity" useGeneratedKeys="true">
-		insert into sys_dept
+		insert into merchant_main
 		(
-			`deptId`,
+			`mcId`,
 			`parent_id`,
 			`name`,
 			`order_num`,
@@ -69,7 +69,7 @@
 		)
 		values
 		(
-			#{deptId},
+			#{mcId},
 			#{parentId},
 			#{name},
 			#{orderNum},
@@ -79,22 +79,22 @@
 	</insert>
 	 
 	<update id="update" parameterType="io.renren.modules.sys.entity.SysDeptEntity">
-		update sys_dept 
+		update merchant_main
 		<set>
 			<if test="parentId != null">`parent_id` = #{parentId}, </if>
 			<if test="name != null">`name` = #{name}, </if>
 			<if test="orderNum != null">`order_num` = #{orderNum},</if>
 			<if test="path != null">`path` = #{path}</if>
 		</set>
-		where dept_id = #{deptId}
+		where mc_id = #{mcId}
 	</update>
 	
 	<update id="delete">
-		update sys_dept set del_flag = -1 where dept_id = #{value}
+		update merchant_main set del_flag = -1 where mc_id = #{value}
 	</update>
 	
 	<select id="queryDetpIdList" resultType="long">
-		select dept_id from sys_dept where parent_id = #{value} and del_flag = 0
+		select mc_id from merchant_main where parent_id = #{value} and del_flag = 0
 	</select>
 
 </mapper>

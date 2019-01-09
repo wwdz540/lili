@@ -39,7 +39,7 @@ public class BaseController {
     }
 
     protected NewMerchInfoEntity getCurrentMerch(){
-        long  deptId = CommonUtil.getUser().getDeptId();
+        long  deptId = CommonUtil.getUser().getMcId();
         NewMerchInfoEntity merchInfo = newMerchInfoService.findOne(deptId);
         return merchInfo;
     }

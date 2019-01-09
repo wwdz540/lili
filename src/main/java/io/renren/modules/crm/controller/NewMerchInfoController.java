@@ -34,10 +34,10 @@ public class NewMerchInfoController extends BaseController {
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
         SysUserEntity user = getUser();
-        if(user.getDeptId()!=1) //如果不顶层商铺管理员 就要加上过滤条件
+        if(user.getMcId()!=1) //如果不顶层商铺管理员 就要加上过滤条件
         {
-            params.put("parentId",user.getDeptId());
-         //   params.put("orDeptId",user.getDeptId());
+            params.put("parentId",user.getMcId());
+         //   params.put("orDeptId",user.getMcId());
         }
 
         if(params.get("parentId")!=null ){

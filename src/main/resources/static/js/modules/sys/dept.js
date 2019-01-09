@@ -2,7 +2,7 @@ var setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
+            idKey: "mcId",
             pIdKey: "parentId",
             rootPId: -1
         },
@@ -110,7 +110,7 @@ var vm = new Vue({
                 btn1: function (index) {
                     var node = ztree.getSelectedNodes();
                     //选择上级部门
-                    vm.dept.parentId = node[0].deptId;
+                    vm.dept.parentId = node[0].mcId;
                     vm.dept.parentName = node[0].name;
 
                     layer.close(index);

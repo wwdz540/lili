@@ -111,7 +111,7 @@ public class SysUserController extends AbstractController {
 	@RequiresPermissions("sys:user:save")
 	public R save(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, AddGroup.class);
-//		if (getDeptId() > user.getDeptId()){
+//		if (getMcId() > user.getMcId()){
 //			return R.error("只能创建下级账号");
 //		}
 		user.setCreateUserId(getUserId());
@@ -131,7 +131,7 @@ public class SysUserController extends AbstractController {
 	public R update(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, UpdateGroup.class);
 
-//		if (getDeptId() >= user.getDeptId()){
+//		if (getMcId() >= user.getMcId()){
 //			return R.error("只能创建下级账号");
 //		}
 		user.setCreateUserId(getUserId());

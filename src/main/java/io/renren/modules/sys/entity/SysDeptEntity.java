@@ -1,7 +1,5 @@
 package io.renren.modules.sys.entity;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,7 +15,7 @@ public class SysDeptEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//部门ID
-	private Long deptId;
+	private Long mcId;
 	//上级部门ID，一级部门为0
 	private Long parentId;
 	//部门名称
@@ -54,12 +52,12 @@ public class SysDeptEntity implements Serializable {
 		this.deptType = deptType;
 	}
 
-	public void setDeptId(Long deptId) {
-		this.deptId = deptId;
+	public void setMcId(Long mcId) {
+		this.mcId = mcId;
 	}
 
-	public Long getDeptId() {
-		return deptId;
+	public Long getMcId() {
+		return mcId;
 	}
 	/**
 	 * 设置：上级部门ID，一级部门为0

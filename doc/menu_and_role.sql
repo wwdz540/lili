@@ -23,7 +23,7 @@ VALUES
 
 ##创建角色
 
-INSERT INTO sys_role (role_id, role_name, remark, dept_id, create_time)
+INSERT INTO sys_role (role_id, role_name, remark, mc_id, create_time)
 VALUES
   (10, '新代理商', null, 0, now()),
   (11, '普通商户', null, 0, now());
@@ -63,7 +63,7 @@ INSERT INTO sys_role_menu ( role_id, menu_id)
 
 
 -- /**超级管理员*/
- INSERT INTO sys_user (user_id, username, password, salt, email, mobile, status, dept_id, create_time, rate, leader)
+ INSERT INTO sys_user (user_id, username, password, salt, email, mobile, status, mc_id, create_time, rate, leader)
     VALUES (300, 'lili', 'eff23e3a161934f8a1a280ff2cf3f4aa8a54e9458c2197f809ec21eb8bd171d0', 'FGHufcChcebZNJi2yeUu', '461892464@qq.com', '18661203323', 1, 1, '2018-12-16 02:19:14', null, 1);
 
 INSERT INTO sys_user_role ( user_id, role_id) VALUES ( 300, 10);

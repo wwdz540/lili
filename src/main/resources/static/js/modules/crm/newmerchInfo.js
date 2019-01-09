@@ -68,11 +68,16 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
         defaultRate:[
-            { payType:'支付宝',rate:0.03,max:25,shareBenefit:0.02},
-            { payType:'微信',rate:0.03,max:25,shareBenefit:0.02},
-            { payType:'借记卡',rate:0.03,max:25,shareBenefit:0.02},
-            { payType:'贷记卡',rate:0.03,max:25,shareBenefit:0.02},
-            { payType:'标准',rate:0.03,max:25,shareBenefit:0.02}
+            // { payType:'支付宝',rate:0.03,max:25,shareBenefit:0.02},
+            // { payType:'微信',rate:0.03,max:25,shareBenefit:0.02},
+            // { payType:'借记卡',rate:0.03,max:25,shareBenefit:0.02},
+            // { payType:'贷记卡',rate:0.03,max:25,shareBenefit:0.02},
+            // { payType:'标准',rate:0.03,max:25,shareBenefit:0.02}
+            { payType:'支付宝',rate:0,max:0,shareBenefit:0},
+            { payType:'微信',rate:0,max:0,shareBenefit:0},
+            { payType:'借记卡',rate:0,max:0,shareBenefit:0},
+            { payType:'贷记卡',rate:0,max:0,shareBenefit:0},
+            { payType:'标准',rate:0,max:0,shareBenefit:0}
         ],
 		q:{
             keyword:'',

@@ -1,20 +1,15 @@
 package io.renren.modules.crm.controller;
 
 import io.renren.common.utils.*;
-import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
 import io.renren.modules.crm.entity.TransDataEntity;
-import io.renren.modules.crm.service.MerchInfoService;
 import io.renren.modules.crm.service.NewMerchInfoService;
 import io.renren.modules.crm.service.TransDataService;
 import io.renren.modules.crm.service.impl.UserGetService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -182,7 +177,7 @@ public class TransDataController{
 		return R.ok().put("data",map);
 	}
 	protected void setParaPath(Map params){
-		long  deptId = CommonUtil.getUser().getDeptId();
+		long  deptId = CommonUtil.getUser().getMcId();
 		NewMerchInfoEntity merchInfo = newMerchInfoService.findOne(deptId);
 		if(merchInfo.getId() != 1){
 			params.put("path",merchInfo.getPath());

@@ -63,7 +63,7 @@
 			`industry`,
 			`merchno_sub`,
 			`user_id`,
-			`dept_id`,
+			`mc_id`,
 			`create_time`,
 			`update_time`
 
@@ -81,7 +81,7 @@
 			#{industry},
 			#{merchnoSub},
 			#{userId},
-			#{deptId},
+			#{mcId},
 			now(),
 			now()
 		)
@@ -98,7 +98,7 @@
 			<if test="industry != null">`industry` = #{industry}, </if>
 			<if test="merchnoSub != null">`merchno_sub` = #{merchnoSub},</if>
 			<if test="userId != null">`user_id` = #{userId},</if>
-			<if test = "deptId != null">`dept_id`=#{deptId}</if>
+			<if test = "mcId != null">`mc_id`=#{mcId}</if>
 		</set>
 		where id = #{id}
 	</update>

@@ -91,10 +91,10 @@ public class SysLoginController {
 
 		Map userInfo = new HashMap();
 		userInfo.put("userId",user.getUserId());
-		userInfo.put("deptId",user.getDeptId());
+		userInfo.put("deptId",user.getMcId());
 
 
-		SysDeptEntity dept = sysDeptService.queryObject(user.getDeptId());
+		SysDeptEntity dept = sysDeptService.queryObject(user.getMcId());
 		userInfo.put("parentId",dept.getParentId());
 		userInfo.put("deptType",dept.getDeptType());
 		userInfo.put("deptName",dept.getName());

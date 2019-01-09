@@ -247,7 +247,7 @@
             data: {
                 simpleData: {
                     enable: true,
-                    idKey: "deptId",
+                    idKey: "mcId",
                     pIdKey: "parentId",
                     rootPId: -1
                 },
@@ -310,7 +310,7 @@
                     //加载部门树
                     $.get(baseURL + "sys/dept/list", function(r){
                         ztree = $.fn.zTree.init($("#deptTree"), setting, r);
-                        var node = ztree.getNodeByParam("deptId", userInfo.deptId);
+                        var node = ztree.getNodeByParam("mcId", userInfo.mcId);
                         if(node != null){
                             ztree.selectNode(node);
                             vm.queryDeptName = node.name;
@@ -332,7 +332,7 @@
                         btn: ['确定', '取消'],
                         btn1: function (index) {
                             var node = ztree.getSelectedNodes();
-                            if(node[0].deptId != 1)
+                            if(node[0].mcId != 1)
                             {
                                 vm.q.path=node[0].path;
                             }

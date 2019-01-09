@@ -44,7 +44,7 @@ public class MerchInfoEntity {
     /***
      * 让商户与部门进行绑定,实现树形结构
      */
-    private long deptId;
+    private long mcId;
 
     private String deptName;
 
@@ -170,12 +170,12 @@ public class MerchInfoEntity {
     }
 
 
-    public long getDeptId() {
-        return deptId;
+    public long getMcId() {
+        return mcId;
     }
 
-    public MerchInfoEntity setDeptId(long deptId) {
-        this.deptId = deptId;
+    public MerchInfoEntity setMcId(long mcId) {
+        this.mcId = mcId;
         return this;
     }
 

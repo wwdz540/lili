@@ -6,7 +6,6 @@ import io.renren.modules.crm.service.MerchInfoService;
 import io.renren.modules.sys.dao.SysUserDao;
 import io.renren.modules.sys.dao.SysUserRoleDao;
 import io.renren.modules.sys.entity.SysUserEntity;
-import io.renren.modules.sys.service.SysUserService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.assertj.core.util.Lists;
@@ -61,7 +60,7 @@ public class MerchInfoServiceImpl implements MerchInfoService {
 
             user.setEmail("1@qq.com");
             user.setStatus(1);
-            user.setDeptId(10L);
+            user.setMcId(10L);
             sysUserDao.save(user);
 
 

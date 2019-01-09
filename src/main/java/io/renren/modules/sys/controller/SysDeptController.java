@@ -48,7 +48,7 @@ public class SysDeptController extends AbstractController {
 		//添加一级部门
 		if(getUserId() == Constant.SUPER_ADMIN){
 			SysDeptEntity root = new SysDeptEntity();
-			root.setDeptId(0L);
+			root.setMcId(0L);
 			root.setName("一级部门");
 			root.setParentId(-1L);
 			root.setOpen(true);

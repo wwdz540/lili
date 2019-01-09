@@ -8,7 +8,7 @@
 	</select>
 	
 	<select id="queryList" resultType="io.renren.modules.sys.entity.SysRoleEntity">
-		select r.*, (select d.name from sys_dept d where d.dept_id = r.dept_id) deptName from sys_role r
+		select r.* from sys_role r
 		<where>
 			<if test="roleName != null and roleName.trim() != ''">
 				and r.`role_name` like concat('%',#{roleName},'%')
@@ -48,7 +48,7 @@
 			`role_id`, 
 			`role_name`, 
 			`remark`,
-			`dept_id`,
+			`mc_id`,
 			`create_time`
 		)
 		values
@@ -56,7 +56,7 @@
 			#{roleId}, 
 			#{roleName}, 
 			#{remark},
-			#{deptId},
+			#{mcId},
 			#{createTime}
 		)
 	</insert>
@@ -66,7 +66,7 @@
 		<set> 
 			<if test="roleName != null">`role_name` = #{roleName}, </if>
 			<if test="remark != null">`remark` = #{remark},</if>
-			<if test="deptId != null">`dept_id` = #{deptId}, </if>
+			<if test="mcId != null">`mc_id` = #{mcId}, </if>
 		</set>
 		where role_id = #{roleId}
 	</update>

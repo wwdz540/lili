@@ -11,6 +11,6 @@ import java.util.List;
 public interface RateConfigDao {
      void save(RateConfig config);
      int update(RateConfig config);
-     RateConfig get(@Param("deptId")long deptId, @Param("payType") String payType);
+     RateConfig get(@Param("mcId")long mcId, @Param("payType") String payType);
      List<RateConfig> findByDept(Long deptId);
 }

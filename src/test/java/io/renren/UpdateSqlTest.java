@@ -1,6 +1,5 @@
 package io.renren;
 
-import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
 import io.renren.modules.crm.service.MerchInfoService;
@@ -10,7 +9,6 @@ import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import io.renren.modules.sys.service.SysUserService;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -48,13 +47,15 @@ public class UpdateSqlTest {
 
     @Test
     public void updateData(){
-        jdbcTemplate.execute("delete from sys_dept where dept_id <> 1");
+        jdbcTemplate.execute("delete from merchant_main where mc_id <> 1");
         List<Long> agenIds = jdbcTemplate.queryForList("select user_id from merch_info group by user_id",Long.class);//得到代理商ids
         agenIds.remove(1l);
 
         for (Long agenId : agenIds) {
 
+            if(agenId == null) continue;
            SysUserEntity agen = userDao.findOne(agenId);
+
 
             SysDeptEntity dept = new SysDeptEntity();
             dept.setParentId(1l);
@@ -67,10 +68,10 @@ public class UpdateSqlTest {
 
             sysDeptService.save(dept);
 
-            jdbcTemplate.execute("update sys_user set dept_id = "+dept.getDeptId() +" where user_id = "+agenId);
+            jdbcTemplate.execute("update sys_user set mc_id = "+dept.getMcId() +" where user_id = "+agenId);
 
 
-            update(dept.getDeptId(),4,agen);
+            update(dept.getMcId(),4,agen);
 
 
         }
@@ -79,8 +80,8 @@ public class UpdateSqlTest {
         update(1l,1,u);
 
         updatePath();
-        jdbcTemplate.execute("update sys_user as u set u.dept_id = (select min( m.dept_id) from  merch_info m where m.merchno =u.username )\n" +
-                "where u.dept_id = 10");
+        jdbcTemplate.execute("update sys_user as u set u.mc_id = (select min( m.mc_id) from  merch_info m where m.merchno =u.username )\n" +
+                "where u.mc_id = 10");
 
     }
 
@@ -113,9 +114,9 @@ public class UpdateSqlTest {
            dept.setIndustry("");
            dept.setLegalName("");
            sysDeptService.save(dept);
-           entity.setDeptId(dept.getDeptId());
+           entity.setMcId(dept.getMcId());
            userDao.update(entity);
-           update(dept.getDeptId(),4,entity);
+           update(dept.getMcId(),4,entity);
 
        }
 
@@ -150,7 +151,7 @@ public class UpdateSqlTest {
             dept.setIndustry(merch.getIndustry());
             dept.setLegalName(merch.getLegalName());
             sysDeptService.save(dept);
-            merch.setDeptId(dept.getDeptId());
+            merch.setMcId(dept.getMcId());
             merchInfoService.update(merch);
 
         }
@@ -184,14 +185,30 @@ public class UpdateSqlTest {
                 }
             });
             //list.stream().map(d->d.getId()).forEach(System.out::println);
-            list.stream()
-                    .map(e->e.getId())
-                    .filter(e->e!=1)
-                    .map(id->newMerchInfoService.findOne(id)).forEach(
-                    e->{
-                        newMerchInfoService.update(e);
-                    }
-            );
+        List<NewMerchInfoEntity> merchs = list.stream()
+                .map(e -> e.getId())
+                .filter(e -> e != 1)
+                .map(id -> newMerchInfoService.findOne(id)).collect(Collectors.toList());
+//
+//                    .forEach(
+//                    e->{
+//                        if(e.getMerchno() == null){
+//
+//                        }
+//                        newMerchInfoService.update(e);
+//                    }
+       //     );
+
+        String merchnoPrefix="AGENT_000_";
+
+        for (int i = 0; i < merchs.size(); i++) {
+            NewMerchInfoEntity e = merchs.get(i);
+            if(e.getMerchno()== null){
+                e.setMerchno(merchnoPrefix+i);
+
+            }
+            newMerchInfoService.update(e);
+        }
 
 
 

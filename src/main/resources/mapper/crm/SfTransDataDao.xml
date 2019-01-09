@@ -32,7 +32,7 @@
     <sql id="join_table">
         trans_data t
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
-		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
+		LEFT JOIN merchant_main dept ON dept.mc_id = m.mc_id
     </sql>
 
 

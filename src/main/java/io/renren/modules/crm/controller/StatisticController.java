@@ -170,14 +170,14 @@ public class StatisticController  extends BaseController {
 //        data.put("count",list.size());
 //        data.put("num",merchTotal+"/"+terminalTotal);
         String path = params.get("path")==null ? "00000000":params.get("path").toString();
-        String merchCountSql="select count(1) from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id\n" +
+        String merchCountSql="select count(1) from merchant_main as dept left join merch_info as merch on merch.mc_id= dept.mc_id\n" +
                 "        where dept.del_flag=0  and dept.path like '"+path+"%' and dept.dept_type in(1,3,5)";
 
         int merchTotal = jdbcTemplate.queryForObject(merchCountSql,Integer.class);
 
         String terminalCountSql ="select count(1) from terminal t\n" +
                 "LEFT JOIN merch_info m ON t.merch_id = m.id" +
-                " Left JOIN sys_dept as dept on dept.dept_id = m.dept_id and dept.path like '"+path+"%'";
+                " Left JOIN merchant_main as dept on dept.mc_id = m.mc_id and dept.path like '"+path+"%'";
         int terminalTotal = jdbcTemplate.queryForObject(terminalCountSql,Integer.class);
 
         Map<String,Object> data = new HashMap<>();

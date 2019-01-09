@@ -18,7 +18,7 @@ public class RateConfigServiceImpl implements RateConfigService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void saveOrUpdate(RateConfig rateConfig) {
-        RateConfig mconfig =rateConfigDao.get(rateConfig.getDeptId(),rateConfig.getPayType());
+        RateConfig mconfig =rateConfigDao.get(rateConfig.getMcId(),rateConfig.getPayType());
         if(mconfig == null){
             rateConfigDao.save(rateConfig);
         }else {

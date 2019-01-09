@@ -72,7 +72,7 @@ public class NewMerchInfoEntity {
         entity.setMerchnoSub(this.merchnoSub);
         entity.setCreateTime(this.createTime);
         if(this.id!=null)
-            entity.setDeptId(this.id);
+            entity.setMcId(this.id);
 
         return entity;
     }
@@ -80,7 +80,7 @@ public class NewMerchInfoEntity {
     @Transient
     public SysDeptEntity getDept(){
         SysDeptEntity deptEntity = new SysDeptEntity();
-        deptEntity.setDeptId(this.id);
+        deptEntity.setMcId(this.id);
         deptEntity.setDeptType(this.deptType);
         deptEntity.setName(this.name);
         deptEntity.setParentId(this.parentId);

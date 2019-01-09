@@ -73,7 +73,7 @@ var setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
+            idKey: "mcId",
             pIdKey: "parentId",
             rootPId: -1
         },
@@ -206,7 +206,7 @@ var vm = new Vue({
                 btn: ['确定', '取消'],
                 btn1: function (index) {
                     var node = ztree.getSelectedNodes();
-                    if(node[0].deptId != 1)
+                    if(node[0].mdId != 1)
                     {
                         vm.q.path=node[0].path;
                     }

@@ -46,7 +46,7 @@ var setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
+            idKey: "mcId",
             pIdKey: "parentId",
             rootPId: -1
         },
@@ -68,7 +68,7 @@ var vm = new Vue({
         roleList:{},
         user:{
             status:1,
-            deptId:null,
+            mcId:null,
             deptName:null,
             roleIdList:[],
             rate:null
@@ -82,7 +82,7 @@ var vm = new Vue({
             vm.showList = false;
             vm.title = "新增";
             vm.roleList = {};
-            vm.user = {deptName:null, deptId:null, status:1, roleIdList:[]};
+            vm.user = {deptName:null, mcId:null, status:1, roleIdList:[]};
 
             //获取角色信息
             this.getRoleList();
@@ -93,7 +93,7 @@ var vm = new Vue({
             //加载部门树
             $.get(baseURL + "sys/dept/list", function(r){
                 ztree = $.fn.zTree.init($("#deptTree"), setting, r);
-                var node = ztree.getNodeByParam("deptId", vm.user.deptId);
+                var node = ztree.getNodeByParam("mcId", vm.user.mcId);
                 if(node != null){
                     ztree.selectNode(node);
 
@@ -184,7 +184,7 @@ var vm = new Vue({
                 btn1: function (index) {
                     var node = ztree.getSelectedNodes();
                     //选择上级部门
-                    vm.user.deptId = node[0].deptId;
+                    vm.user.mcId = node[0].mcId;
                     vm.user.deptName = node[0].name;
 
                     layer.close(index);

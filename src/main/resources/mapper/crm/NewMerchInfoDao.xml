@@ -4,13 +4,13 @@
 <mapper namespace="io.renren.modules.crm.dao.NewMerchInfoDao">
     <select id="queryTotal" resultType="int">
         select count(*)
-        from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id
+        from merchant_main as dept left join merch_info as merch on merch.mc_id= dept.mc_id
         where dept.del_flag=0
         <if test="parentId != null and parentId != 0 ">
            and (
             dept.parent_id =#{parentId}
             <if test="orDeptId != null">
-                or dept.dept_id = #{orDeptId}
+                or dept.mc_id = #{orDeptId}
             </if>
             )
         </if>
@@ -31,15 +31,15 @@
     </select>
 
     <select id="queryList" resultType="io.renren.modules.crm.entity.NewMerchInfoEntity">
-        select dept.dept_id as Id,dept.*,merch.id as merch_id,merch.merchno,merchno_sub
-            from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id
+        select dept.mc_id as Id,dept.*,merch.id as merch_id,merch.merchno,merchno_sub
+            from merchant_main as dept left join merch_info as merch on merch.mc_id= dept.mc_id
             where dept.del_flag=0
 
         <if test="parentId != null and parentId != 0 ">
             and (
             dept.parent_id =#{parentId}
             <if test="orDeptId != null">
-                or dept.dept_id = #{orDeptId}
+                or dept.mc_id = #{orDeptId}
 
             </if>
             )
@@ -69,8 +69,8 @@
     </select>
 
     <select id="get" resultType="io.renren.modules.crm.entity.NewMerchInfoEntity">
-          select dept.dept_id as Id,dept.*,merch.id as merch_id,merch.merchno,merchno_sub
-            from sys_dept as dept left join merch_info as merch on merch.dept_id= dept.dept_id
-            where dept.dept_id=#{deptId}
+          select dept.mc_id as Id,dept.*,merch.id as merch_id,merch.merchno,merchno_sub
+            from merchant_main as dept left join merch_info as merch on merch.mc_id= dept.mc_id
+            where dept.mc_id=#{mcId}
     </select>
 </mapper>

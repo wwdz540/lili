@@ -77,8 +77,8 @@ public class SysUserEntity implements Serializable {
 	/**
 	 * 部门ID
 	 */
-	@NotNull(message="部门不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	private Long deptId;
+	@NotNull(message="商户不能为空", groups = {AddGroup.class, UpdateGroup.class})
+	private Long mcId;
 
 	/**
 	 * 部门名称
@@ -236,12 +236,12 @@ public class SysUserEntity implements Serializable {
 		this.salt = salt;
 	}
 
-	public Long getDeptId() {
-		return deptId;
+	public Long getMcId() {
+		return mcId;
 	}
 
-	public void setDeptId(Long deptId) {
-		this.deptId = deptId;
+	public void setMcId(Long mcId) {
+		this.mcId = mcId;
 	}
 
 	public String getDeptName() {

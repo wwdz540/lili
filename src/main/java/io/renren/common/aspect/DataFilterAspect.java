@@ -2,7 +2,6 @@ package io.renren.common.aspect;
 
 import io.renren.common.annotation.DataFilter;
 import io.renren.common.exception.RRException;
-import io.renren.common.utils.Constant;
 import io.renren.common.utils.ShiroUtils;
 import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
@@ -15,9 +14,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.reflect.annotation.ExceptionProxy;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -46,7 +43,7 @@ public class DataFilterAspect {
 
             //如果不是超级管理员，则只能查询本部门及子部门数据
            // if(user.getUserId() != Constant.SUPER_ADMIN){
-            if(user.getDeptId()!=1){
+            if(user.getMcId()!=1){
                 Map map = (Map)params;
                 map.put("filterSql", getFilterSQL(user, point));
             }
@@ -72,7 +69,7 @@ public class DataFilterAspect {
         }catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        SysDeptEntity curDept = sysDeptService.queryObject(user.getDeptId());
+        SysDeptEntity curDept = sysDeptService.queryObject(user.getMcId());
 
         DataFilter dataFilter = realMethod.getAnnotation(DataFilter.class);
 
@@ -84,7 +81,7 @@ public class DataFilterAspect {
 
 
         //获取子部门ID
-        //String subDeptIds = sysDeptService.getSubDeptIdList(user.getDeptId());
+        //String subDeptIds = sysDeptService.getSubDeptIdList(user.getMcId());
         StringBuilder filterSql = new StringBuilder();
         filterSql.append(" and ");
         filterSql.append(tableAlias).append("path like '"+curDept.getPath()+"%'");

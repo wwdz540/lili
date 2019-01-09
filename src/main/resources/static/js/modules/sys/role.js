@@ -62,7 +62,7 @@ var dept_setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
+            idKey: "mcId",
             pIdKey: "parentId",
             rootPId: -1
         },
@@ -78,7 +78,7 @@ var data_setting = {
     data: {
         simpleData: {
             enable: true,
-            idKey: "deptId",
+            idKey: "mcId",
             pIdKey: "parentId",
             rootPId: -1
         },

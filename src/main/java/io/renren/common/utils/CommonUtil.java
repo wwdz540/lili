@@ -83,17 +83,17 @@ public class CommonUtil {
     }
 
     public static boolean isAdmin(){
-        return getUser().getDeptId() == 1;
+        return getUser().getMcId() == 1;
     }
 
     public static boolean isDL(){
-        int  type = sysDeptService.queryObject(getUser().getDeptId()).getDeptType() ;
+        int  type = sysDeptService.queryObject(getUser().getMcId()).getDeptType() ;
         return type == 2;
     }
 
     public static boolean isMerch(){
-       int  type = sysDeptService.queryObject(getUser().getDeptId()).getDeptType() ;
-        //return getUser().getDeptId() == 10;
+       int  type = sysDeptService.queryObject(getUser().getMcId()).getDeptType() ;
+        //return getUser().getMcId() == 10;
         return type ==1
                 || type==4
                 || type==5

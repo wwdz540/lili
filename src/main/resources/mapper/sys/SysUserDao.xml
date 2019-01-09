@@ -8,7 +8,7 @@
 	
 	<select id="queryList" resultType="io.renren.modules.sys.entity.SysUserEntity">
 		select u.*, d.name deptName from sys_user u
-		left join sys_dept as d on d.dept_id= u.dept_id
+		left join merchant_main as d on d.mc_id= u.mc_id
 		<where>
 			<if test="username != null and username.trim() != ''">
 				and u.`username` like concat('%',#{username},'%')
@@ -36,7 +36,7 @@
 	
 	<select id="queryTotal" resultType="int">
 		select count(*) from sys_user u
-		left join sys_dept as d on d.dept_id= u.dept_id
+		left join merchant_main as d on d.mc_id= u.mc_id
 		<where>
 			<if test="username != null and username.trim() != ''">
 				and u.`username` like concat('%',#{username},'%')
@@ -85,7 +85,7 @@
 			`email`, 
 			`mobile`, 
 			`status`,
-			`dept_id`,
+			`mc_id`,
 			`rate`,
 			`leader`,
 			`create_time`
@@ -99,7 +99,7 @@
 			#{email}, 
 			#{mobile}, 
 			#{status},
-			#{deptId},
+			#{mcId},
 			#{rate},
 			#{leader},
 			#{createTime}
@@ -114,7 +114,7 @@
 			<if test="email != null">`email` = #{email}, </if>
 			<if test="mobile != null">`mobile` = #{mobile}, </if>
 			<if test="status != null">`status` = #{status}, </if>
-			<if test="deptId != null">`dept_id` = #{deptId}, </if>
+			<if test="mcId != null">`mc_id` = #{mcId}, </if>
 			<if test="rate != null">`rate` = #{rate}, </if>
 		</set>
 		where user_id = #{userId}
@@ -146,7 +146,7 @@
 	</select>
 
 	<select id="findParent" resultType="io.renren.modules.sys.entity.SysUserEntity">
-		SELECT  * FROM sys_user WHERE dept_id IN
+		SELECT  * FROM sys_user WHERE mc_id IN
 		<foreach item="dept" collection="list" open="(" separator="," close=")">
 			#{dept}
 		</foreach>

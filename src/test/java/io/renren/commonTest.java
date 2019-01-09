@@ -1,17 +1,12 @@
 package io.renren;
 
 
-import com.alibaba.fastjson.JSON;
-import io.renren.datasources.DataSourceTestService;
-import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.crm.entity.MerchInfoEntity;
 import io.renren.modules.crm.service.MerchInfoService;
 import io.renren.modules.sys.dao.SysUserDao;
 import io.renren.modules.sys.dao.SysUserRoleDao;
 import io.renren.modules.sys.entity.SysUserEntity;
-import io.renren.modules.sys.service.SysUserService;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
@@ -57,7 +52,7 @@ public class commonTest {
 
                 user.setEmail("1@qq.com");
                 user.setStatus(1);
-                user.setDeptId(10L);
+                user.setMcId(10L);
                 sysUserDao.save(user);
             }catch (Exception e){
                 System.out.println("商户号："+merchInfoEntity.getMerchno());
@@ -70,7 +65,7 @@ public class commonTest {
 
         List<SysUserEntity> list = sysUserDao.findAll();
         for (SysUserEntity userEntity : list) {
-            if (userEntity.getDeptId() != 10){
+            if (userEntity.getMcId() != 10){
                 continue;
             }
             Map<String, Object> map = new HashMap<>();

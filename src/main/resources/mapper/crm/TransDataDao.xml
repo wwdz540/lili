@@ -11,7 +11,7 @@
 	<select id="queryList" resultType="io.renren.modules.crm.entity.TransDataEntity">
 		select t.*, m.merch_name AS merchName from trans_data t
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
-		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
+		LEFT JOIN merchant_main dept ON dept.mc_id = m.mc_id
 		WHERE
 		m.enabled = 1
 		<if test="path != null and path.trim() !=''">
@@ -38,8 +38,8 @@
 		<if test="merchno !=null">
 			and t.merchantId = #{merchno}
 		</if>
-		<if test="deptId != null and  deptId !=0 ">
-			and dept.dept_id = #{deptId}
+		<if test="mcId != null and  mcId !=0 ">
+			and dept.mc_id = #{mcId}
 		</if>
 		<if test="parentId != nlll and parentId !=0 and parentId != 1">
 			and dept.parent_id = #{parentId}
@@ -60,7 +60,7 @@
 	<select id="queryTotal" resultType="int">
 		select COUNT(t.id) from trans_data t
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
-		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
+		LEFT JOIN merchant_main dept ON dept.mc_id = m.mc_id
 		WHERE  m.enabled = 1
 		<if test="path != null and path.trim() !=''">
 			and dept.path like concat(#{path},'%')
@@ -83,8 +83,8 @@
 		<if test="merchno !=null">
 			and t.merchantId = #{merchno}
 		</if>
-		<if test="deptId != null and  deptId !=0 ">
-			and dept.dept_id = #{deptId}
+		<if test="mcId != null and  mcId !=0 ">
+			and dept.mc_id = #{mcId}
 		</if>
 		<if test="parentId != nlll and parentId !=0 and parentId != 1">
 			and dept.parent_id = #{parentId}
@@ -133,7 +133,7 @@
 	<select id="queryAvg" resultType="int">
 		select avg(t.amt) from trans_data t
 		LEFT JOIN merch_info m ON m.merchno = t.merchantId
-		LEFT JOIN sys_dept dept ON dept.dept_id = m.dept_id
+		LEFT JOIN merchant_main dept ON dept.mc_id = m.mc_id
 		WHERE  m.enabled = 1
 		<if test="path != null and path.trim() !=''">
 			and dept.path like concat(#{path},'%')
@@ -156,8 +156,8 @@
 		<if test="merchno !=null">
 			and t.merchantId = #{merchno}
 		</if>
-		<if test="deptId != null and  deptId !=0 ">
-			and dept.dept_id = #{deptId}
+		<if test="mcId != null and  mcId !=0 ">
+			and dept.mc_id = #{mcId}
 		</if>
 		<if test="parentId != nlll and parentId !=0 and parentId != 1">
 			and dept.parent_id = #{parentId}

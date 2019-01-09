@@ -29,7 +29,7 @@
     <sql id="join_table">
         fy_trans_data t
         left join merch_info as m on t.merchantno_fuiou = m.merchno
-        left join sys_dept as dept on m.dept_id = dept.dept_id
+        left join merchant_main as dept on m.mc_id = dept.mc_id
     </sql>
 
 
