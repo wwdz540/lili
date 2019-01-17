@@ -44,6 +44,12 @@ public class FyTransDataServiceImpl extends AbstractTransDataServerImpl
     protected void fixResult(TransDataEntity entity){
         entity.setCardType(TypeUtils.fyCardType(entity.getCardType()));
         entity.setIssuerCode(TypeUtils.fyPayType(entity.getIssuerCode()));
+
+        if ("1".equals(entity.getRespCode())){
+            entity.setRespCode("交易成功");
+        }else {
+            entity.setRespCode("交易失败");
+        }
     }
     protected ITransDataDao getDao(){
         return fyTransDataDao;

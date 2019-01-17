@@ -47,6 +47,12 @@ public class SfTransDataServiceImpl extends AbstractTransDataServerImpl
     protected void fixResult(TransDataEntity entity){
         entity.setCardType(TypeUtils.cardType(entity.getCardType()));
         entity.setIssuerCode(TypeUtils.payType(entity.getIssuerCode()));
+
+        if ("00".equals(entity.getRespCode())){
+            entity.setRespCode("交易成功");
+        }else {
+            entity.setRespCode("交易失败");
+        }
     }
     protected ITransDataDao getDao(){
         return transDataDao;
