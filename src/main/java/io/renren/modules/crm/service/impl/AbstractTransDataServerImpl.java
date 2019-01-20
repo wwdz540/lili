@@ -5,6 +5,7 @@ import io.renren.modules.crm.entity.TransDataEntity;
 import io.renren.modules.crm.service.ITransDataService;
 import org.apache.commons.lang.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,14 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
         fixQueryParam(params);
         return getDao().queryTotal(params);
     }
+
+    @Override
+    public TransDataEntity queryById(Long id){
+        TransDataEntity td = getDao().queryObject(id);
+        fixResult(td);
+        return td;
+    }
+
 
     @Override
     public GroupQuery createGroupQuery(final Map<String,Object> params) {
@@ -119,6 +128,11 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
         };
     }
 
+    @Override
+    public void updateSharePoint(Long id,double sharePoint){
+        getDao().updateShareBenefit(id,sharePoint);
+    }
+
     //    public <T> List queryByGroup(Map<String, Object> params, Function<Map,T> function){
 //        fixQueryParam(params);
 //        List<Map<String,Object>> list = getDao().queryByGroup(params);
@@ -128,6 +142,7 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
 //                .map(function)
 //                .collect(Collectors.toList());
 //    }
+
 
     protected abstract void fixQueryParam(Map<String, Object> params);
     protected abstract void fixResult(TransDataEntity result);

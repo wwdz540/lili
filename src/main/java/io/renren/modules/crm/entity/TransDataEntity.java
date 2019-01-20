@@ -183,4 +183,29 @@ public class TransDataEntity {
     public void setShareBenefit(Double shareBenefit) {
         this.shareBenefit = shareBenefit;
     }
+
+    @Override
+    public String toString() {
+        return "TransDataEntity{" +
+                "id=" + id +
+                ", cur='" + cur + '\'' +
+                ", batchNo='" + batchNo + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", traceNo='" + traceNo + '\'' +
+                ", amt='" + amt + '\'' +
+                ", txnRef='" + txnRef + '\'' +
+                ", txnType='" + txnType + '\'' +
+                ", terminalId='" + terminalId + '\'' +
+                ", shortPan='" + shortPan + '\'' +
+                ", merchantId='" + merchantId + '\'' +
+                ", respCode='" + respCode + '\'' +
+                ", txnDatetime=" + txnDatetime +
+                ", cardType='" + cardType + '\'' +
+                ", hashPan='" + hashPan + '\'' +
+                ", issuerCode='" + issuerCode + '\'' +
+                ", merchName='" + merchName + '\'' +
+                ", shareBenefit=" + shareBenefit +
+                ", sharePoint=" + sharePoint +
+                '}';
+    }
 }

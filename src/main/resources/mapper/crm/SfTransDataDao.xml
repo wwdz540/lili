@@ -72,5 +72,17 @@
         </if>;
     </select>
 
+    <update id="updateShareBenefit">
+        update trans_data set share_benefit = #{benefit} where id = #{id}
+    </update>
+
+    <select id="queryObject" resultType="io.renren.modules.crm.entity.TransDataEntity">
+        select
+        t.*, m.merch_name AS merchName
+        from
+        <include refid="join_table"/>
+        WHERE
+        t.id=#{value}
+    </select>
 
 </mapper>

@@ -39,7 +39,7 @@
         t.out_trade_no as trace_no  ,
         t.total_fee as amt,
         t.merchantno_fuiou as merchant_id,
-        dept.name,
+        dept.name as merch_name,
         t.share_benefit,
         t.createtime as txn_datetime,
         t.terminal_trace as txn_ref,
@@ -53,7 +53,7 @@
         <include refid="join_table"/>
         WHERE
         <include refid="cnd" />
-        order by t.id asc
+        order by t.id desc
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
@@ -82,5 +82,31 @@
         ;
     </select>
 
+    <select id="queryObject" resultType="io.renren.modules.crm.entity.TransDataEntity">
+
+        select t.id as id ,
+        t.ins_cd as order_Id,
+        t.out_trade_no as trace_no  ,
+        t.total_fee as amt,
+        t.merchantno_fuiou as merchant_id,
+        dept.name,
+        t.share_benefit,
+        t.createtime as txn_datetime,
+        t.terminal_trace as txn_ref,
+        t.terminal_id ,
+        right(t.cardno,4) as shortPan,
+        t.pay_status as respCode,
+        t.pay_type as issuerCode ,
+        t.card_type as cardType
+
+        from
+        <include refid="join_table"/>
+        WHERE
+        t.id=#{value}
+    </select>
+
+    <update id="updateShareBenefit">
+        update fy_trans_data set share_benefit = #{benefit} where id = #{id}
+    </update>
 
 </mapper>

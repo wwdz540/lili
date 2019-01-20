@@ -6,7 +6,10 @@ import io.renren.common.utils.R;
 import io.renren.modules.crm.entity.NewMerchInfoEntity;
 import io.renren.modules.crm.service.ITransDataService;
 import io.renren.modules.crm.service.NewMerchInfoService;
+import io.renren.modules.crm.service.impl.ShareTransDataServerImpl;
 import io.renren.modules.sys.service.SysDeptService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,8 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/crm/stc")
 public class StatisticController  extends BaseController {
+    private static final Logger log = LoggerFactory.getLogger(StatisticController.class);
+
     @Autowired
     private SysDeptService deptService;
 
@@ -49,9 +54,11 @@ public class StatisticController  extends BaseController {
         List<Map<String,Object>> result = new ArrayList<>();
         params.remove("deptType");
         for (NewMerchInfoEntity m : list) {
+
             params.put("path",m.getPath());
             Map<String,Object> item = new HashMap<>();
             item.put("name",m.getName());
+           log.info("merch name is {}",m.getName());
 
             Map<String, Object> summary = service.createGroupQuery(params)
                     .collection4Amt("count", "count")

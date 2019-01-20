@@ -18,6 +18,11 @@ public interface ITransDataService {
 
      GroupQuery createGroupQuery(Map<String, Object> params);
 
+     void updateSharePoint(Long id,double sharePoint);
+
+    TransDataEntity queryById(Long id);
+
+
    // public <T> List<T> queryByGroup(Map<String, Object> params, Function<Map,T> function);
 
     interface GroupQuery{

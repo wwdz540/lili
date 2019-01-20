@@ -5,7 +5,7 @@ $(function () {
         { label: '订单号', name: 'orderId', width: 40},
         { label: '终端流水号', name: 'traceNo', width: 40 },
         { label: '金额', name: 'amt', width: 40 },
-        { label: '分润', name: 'sharePoint', width: 40 },
+        { label: '分润', name: 'shareBenefit', width: 40 },
         { label: '商户号', name: 'merchantId', width: 55 },
         { label: '商户名称', name: 'merchName', width: 55 },
         { label: '交易时间', name: 'txnDatetime', width: 55 },
