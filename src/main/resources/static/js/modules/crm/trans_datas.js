@@ -15,8 +15,8 @@ $(function () {
         { label: '交易状态', name: 'respCode', width: 40 },
         { label: '发卡机构', name: 'issuerCode', width: 30 },
         { label: '卡类型', name: 'cardType', width: 30},
-        {label:'手续费',name:'tdRate',width:30},
-        {label:'费率',name:'serviceCharge',width:30},
+        {label:'费率%',name:'tdRate',width:30},
+        {label:'手续费',name:'serviceCharge',width:30},
         { label: '客单价', name: 'cardType', width: 40,formatter:fmtFun}
 
     ];
