@@ -8,6 +8,7 @@ $(function () {
         { label: '分润', name: 'shareBenefit', width: 40 },
         { label: '商户号', name: 'merchantId', width: 55 },
         { label: '商户名称', name: 'merchName', width: 55 },
+        {label:'代理商名',name:'agencyName',width:55},
         { label: '交易时间', name: 'txnDatetime', width: 55 },
         { label: '交易参考号', name: 'txnRef', width: 40 },
         { label: '终端号', name: 'terminalId', width: 40 },
@@ -60,7 +61,7 @@ $(function () {
                 contentType: "application/json",
                 data: vm.q,
                 success: function(r){
-                    $("#sharpoint").html("总金额："+r.amount+",分润："+r.sharePoint);
+                    $("#sharpoint").html("总金额："+r.amount+",分润："+r.sharePoint+",手续费："+r.scSum);
                 }
             });
         },

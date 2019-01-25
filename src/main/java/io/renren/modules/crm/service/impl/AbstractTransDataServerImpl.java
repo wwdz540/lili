@@ -4,7 +4,10 @@ import io.renren.common.utils.CommonUtil;
 import io.renren.modules.crm.dao.ITransDataDao;
 import io.renren.modules.crm.entity.TransDataEntity;
 import io.renren.modules.crm.service.ITransDataService;
+import io.renren.modules.sys.dao.SysDeptDao;
+import io.renren.modules.sys.entity.SysDeptEntity;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,6 +16,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class AbstractTransDataServerImpl implements ITransDataService {
+
+    @Autowired
+    private SysDeptDao sysDeptDao;
 
     @Override
     public List<TransDataEntity> queryList(Map<String, Object> params) {
@@ -134,15 +140,7 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
         getDao().updateShareBenefit(id,sharePoint);
     }
 
-    //    public <T> List queryByGroup(Map<String, Object> params, Function<Map,T> function){
-//        fixQueryParam(params);
-//        List<Map<String,Object>> list = getDao().queryByGroup(params);
-//        if(function == null) return list;
-//        return list
-//                .stream()
-//                .map(function)
-//                .collect(Collectors.toList());
-//    }
+
     private void fixTheResult(TransDataEntity result){
         fixResult(result);
         result.setAmt(CommonUtil.formatAB(result.getAmt()));
@@ -152,6 +150,9 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
         if(result.getServiceCharge() != 0) {
             result.setServiceCharge(result.getServiceCharge() / 100);
         }
+        SysDeptEntity mc = sysDeptDao.queryObject(result.getParentMc());
+        result.setAgencyName(mc.getName());
+       // System.out.println(result.getParentMc());
     }
 
 

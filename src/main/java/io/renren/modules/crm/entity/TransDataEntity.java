@@ -31,6 +31,12 @@ public class TransDataEntity {
     private double tdRate=0.0d;
     private double serviceCharge=0;
 
+    //父商户Id
+    private long parentMc;
+
+    private String agencyName;
+
+
     private BigDecimal sharePoint = BigDecimal.ZERO;
 
 
@@ -201,6 +207,22 @@ public class TransDataEntity {
 
     public void setServiceCharge(double serviceCharge) {
         this.serviceCharge = serviceCharge;
+    }
+
+    public long getParentMc() {
+        return parentMc;
+    }
+
+    public void setParentMc(long parentMc) {
+        this.parentMc = parentMc;
+    }
+
+    public String getAgencyName() {
+        return agencyName;
+    }
+
+    public void setAgencyName(String agencyName) {
+        this.agencyName = agencyName;
     }
 
     @Override

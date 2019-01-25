@@ -89,12 +89,13 @@ public class MyTransDataController extends BaseController {
                 .collection("count")
                 .collection4Amt("sum","amt-sum")
                 .collection4Amt("avg","amt-avg")
+                .collection("sum","service_charge","sc_sum")
                 .querySingleMap();
 
         return R.ok(map)            //@TODO 应该要返回更多内容
                 .put("sharePoint",CommonUtil.formatAB(map.get("share-sum")))
-                .put("amount",CommonUtil.formatAB(map.get("amt-sum")));
-
+                .put("amount",CommonUtil.formatAB(map.get("amt-sum")))
+                .put("scSum",CommonUtil.formatAB(map.get("sc_sum")));
     }
 
     DateFormat df = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");

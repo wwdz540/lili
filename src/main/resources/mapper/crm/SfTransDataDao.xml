@@ -38,7 +38,8 @@
 
     <select id="queryList" resultType="io.renren.modules.crm.entity.TransDataEntity">
         select
-        t.*, m.merch_name AS merchName
+        t.*, m.merch_name AS merchName,
+        dept.parent_id as  parentMc
         from
         <include refid="join_table"/>
         WHERE

@@ -49,8 +49,8 @@
         t.pay_type as issuerCode ,
         t.card_type as cardType,
         t.td_rate as tdRate,
-        service_charge as serviceCharge
-
+        service_charge as serviceCharge,
+        dept.parent_id as  parentMc
         from
         <include refid="join_table"/>
         WHERE
