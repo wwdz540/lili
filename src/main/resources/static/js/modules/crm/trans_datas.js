@@ -2,8 +2,8 @@ $(function () {
 
     var col =  [
         { label: 'ID', name: 'id', width: 35 },
-        { label: '订单号', name: 'orderId', width: 40},
-        { label: '终端流水号', name: 'traceNo', width: 40 },
+      //  { label: '订单号', name: 'orderId', width: 40},
+       // { label: '终端流水号', name: 'traceNo', width: 40 },
         { label: '金额', name: 'amt', width: 40 },
         { label: '分润', name: 'shareBenefit', width: 40 },
         { label: '商户号', name: 'merchantId', width: 55 },
@@ -15,6 +15,8 @@ $(function () {
         { label: '交易状态', name: 'respCode', width: 40 },
         { label: '发卡机构', name: 'issuerCode', width: 30 },
         { label: '卡类型', name: 'cardType', width: 30},
+        {label:'手续费',name:'tdRate',width:30},
+        {label:'费率',name:'serviceCharge',width:30},
         { label: '客单价', name: 'cardType', width: 40,formatter:fmtFun}
 
     ];
@@ -51,7 +53,7 @@ $(function () {
         },
         gridComplete:function(){
         	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+        //	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
             $.ajax({
                 type: "get",
                 url: baseURL + "crm/td/summary",

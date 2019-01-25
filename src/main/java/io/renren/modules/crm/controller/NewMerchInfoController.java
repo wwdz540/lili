@@ -27,7 +27,6 @@ import java.util.Map;
 @RequestMapping("/crm/newmerchInfo")
 public class NewMerchInfoController extends BaseController {
 
-
     @Autowired
     NewMerchInfoService service ;
 

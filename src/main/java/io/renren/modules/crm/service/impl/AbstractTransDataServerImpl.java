@@ -1,5 +1,6 @@
 package io.renren.modules.crm.service.impl;
 
+import io.renren.common.utils.CommonUtil;
 import io.renren.modules.crm.dao.ITransDataDao;
 import io.renren.modules.crm.entity.TransDataEntity;
 import io.renren.modules.crm.service.ITransDataService;
@@ -17,7 +18,7 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
     public List<TransDataEntity> queryList(Map<String, Object> params) {
         fixQueryParam(params);
         List<TransDataEntity> list = getDao().queryList(params);
-        list.forEach(this::fixResult);
+        list.forEach(this::fixTheResult);
         return list;
     }
 
@@ -142,6 +143,16 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
 //                .map(function)
 //                .collect(Collectors.toList());
 //    }
+    private void fixTheResult(TransDataEntity result){
+        fixResult(result);
+        result.setAmt(CommonUtil.formatAB(result.getAmt()));
+        if(result.getShareBenefit()!=null) {
+            result.setShareBenefit(result.getShareBenefit() / 100);
+        }
+        if(result.getServiceCharge() != 0) {
+            result.setServiceCharge(result.getServiceCharge() / 100);
+        }
+    }
 
 
     protected abstract void fixQueryParam(Map<String, Object> params);

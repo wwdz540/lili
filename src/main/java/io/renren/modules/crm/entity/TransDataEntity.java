@@ -28,6 +28,9 @@ public class TransDataEntity {
 
     private Double shareBenefit;
 
+    private double tdRate=0.0d;
+    private double serviceCharge=0;
+
     private BigDecimal sharePoint = BigDecimal.ZERO;
 
 
@@ -182,6 +185,22 @@ public class TransDataEntity {
 
     public void setShareBenefit(Double shareBenefit) {
         this.shareBenefit = shareBenefit;
+    }
+
+    public double getTdRate() {
+        return tdRate;
+    }
+
+    public void setTdRate(double tdRate) {
+        this.tdRate = tdRate;
+    }
+
+    public double getServiceCharge() {
+        return serviceCharge;
+    }
+
+    public void setServiceCharge(double serviceCharge) {
+        this.serviceCharge = serviceCharge;
     }
 
     @Override

@@ -47,7 +47,9 @@
         right(t.cardno,4) as shortPan,
         t.pay_status as respCode,
         t.pay_type as issuerCode ,
-        t.card_type as cardType
+        t.card_type as cardType,
+        t.td_rate as tdRate,
+        service_charge as serviceCharge
 
         from
         <include refid="join_table"/>
