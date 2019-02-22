@@ -102,6 +102,7 @@
          <!--</td>-->
     <!--</tr>-->
 <!--</table>-->
+    <table id="jqGrid"></table>
 
 </div>
 <div id="deptLayer" style="display: none;padding:10px;">
@@ -109,6 +110,48 @@
 </div>
 <script type="text/javascript">
 
+
+    $(function () {
+
+        function formatNumber(d,opetion,row){
+            var result = d;
+            if(!d || d == ""){
+                result = 0;
+            }
+            return result.toFixed(2);
+        }
+
+        $("#jqGrid").jqGrid({
+            url: baseURL + "crm/stc/list",
+            datatype: "json",
+            postData:vm.q,
+            colModel: [
+                { label: '代理/商户名称', name: 'name', index: "name", width: 45, key: true },
+                { label: '总数条数', name: 'count', width: 75,formatter: formatNumber},
+                { label: '平均每单', name: 'avg', width: 75 ,formatter: formatNumber},
+                { label: '总金额', name: 'sum', width: 90 ,formatter: formatNumber},
+                { label: '分润', name: 'sharePoint', width: 80 ,formatter: formatNumber}
+            ],
+            viewrecords: true,
+            height: 385,
+            rownumbers: true,
+            rownumWidth: 25,
+            autowidth:true,
+            multiselect: true,
+            prmNames : {
+                page:"page",
+                rows:"limit",
+                order: "order"
+            },
+            gridComplete:function(){
+                //隐藏grid底部滚动条
+                $("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+            },
+            jsonReader : {
+                root: "result"
+            }
+        });
+    });
 
     var setting = {
         data: {
@@ -141,23 +184,17 @@
             },
             methods:{
                 query:function(){
-                    $.ajax({
-                        type: "GET",
-                        url: baseURL + "crm/stc/list",
-                        data:vm.q,
-                        dataType: "json",
-                        success: function(r){
-                            vm.list =r.result;
-                        }
-                    });
+                    vm.reload();
+                    // $.ajax({
+                    //     type: "GET",
+                    //     url: baseURL + "crm/stc/list",
+                    //     data:vm.q,
+                    //     dataType: "json",
+                    //     success: function(r){
+                    //         vm.list =r.result;
+                    //     }
+                    // });
 
-                },
-                formatNumber(d){
-                    var result = d;
-                    if(!d || d == ""){
-                        result = 0;
-                    }
-                    return result.toFixed(2);
                 },
                 initDate:function () {
                     var locale = {
@@ -242,7 +279,7 @@
         });
     vm.getDept();
     vm.onDateChange(moment().subtract(1, 'days'),moment());
-    vm.query();
+  //  vm.query();
 
 </script>
 </body>
