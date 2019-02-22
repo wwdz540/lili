@@ -45,7 +45,7 @@ public class UpdateSqlTest {
     private WeakHashMap<Long,String> parenId2Path;
 
 
-    @Test
+ //   @Test
     public void updateData(){
         jdbcTemplate.execute("delete from merchant_main where mc_id <> 1");
         List<Long> agenIds = jdbcTemplate.queryForList("select user_id from merch_info group by user_id",Long.class);//得到代理商ids
@@ -79,13 +79,13 @@ public class UpdateSqlTest {
         u.setUserId(1l);
         update(1l,1,u);
 
-        updatePath();
+       // updatePath();
         jdbcTemplate.execute("update sys_user as u set u.mc_id = (select min( m.mc_id) from  merch_info m where m.merchno =u.username )\n" +
                 "where u.mc_id = 10");
 
     }
 
-    @Test
+   // @Test
     public void test2(){
         //(7,6,'力力数据',0,0),(8,6,'代理商',1,0),(9,8,'二级代理',0,0),(10,6,'商户',0,0);
 
@@ -169,7 +169,7 @@ public class UpdateSqlTest {
         return parentPath;
     }
 
-   // @Test
+    @Test
     public void updatePath(){
 
 
@@ -189,15 +189,7 @@ public class UpdateSqlTest {
                 .map(e -> e.getId())
                 .filter(e -> e != 1)
                 .map(id -> newMerchInfoService.findOne(id)).collect(Collectors.toList());
-//
-//                    .forEach(
-//                    e->{
-//                        if(e.getMerchno() == null){
-//
-//                        }
-//                        newMerchInfoService.update(e);
-//                    }
-       //     );
+
 
         String merchnoPrefix="AGENT_000_";
 
@@ -207,6 +199,7 @@ public class UpdateSqlTest {
                 e.setMerchno(merchnoPrefix+i);
 
             }
+
             newMerchInfoService.update(e);
         }
 

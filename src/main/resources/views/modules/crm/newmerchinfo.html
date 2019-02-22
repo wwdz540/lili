@@ -149,6 +149,30 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label">费率设制</div>
 				<div class="col-sm-10">
+					<!--<table class="rate-config-tb">-->
+						<!--<thead>-->
+						<!--<tr>-->
+							<!--<th></th>-->
+							<!--<th>费率（%）</th>-->
+							<!--<th>最高（分）</th>-->
+							<!--<th>分润（%)</th>-->
+						<!--</tr>-->
+
+						<!--</thead>-->
+						<!--<tbody>-->
+						<!--<template v-for="rc in merch.rateConfigs">-->
+							<!--<tr>-->
+								<!--<td>{{rc.payType}}</td>-->
+								<!--<td> <input type="text"  v-model="rc.rate"/></td>-->
+								<!--<td> <input type="text"  v-model="rc.max"/></td>-->
+								<!--<td> <input type="text"  v-model="rc.shareBenefit"/></td>-->
+							<!--</tr>-->
+						<!--</template>-->
+
+						<!--</tbody>-->
+
+
+					<!--</table>-->
 					<table class="rate-config-tb">
 						<thead>
 						<tr>
@@ -157,21 +181,39 @@
 							<th>最高（分）</th>
 							<th>分润（%)</th>
 						</tr>
-
 						</thead>
 						<tbody>
-						<template v-for="rc in merch.rateConfigs">
-							<tr>
-								<td>{{rc.payType}}</td>
-								<td> <input type="text"  v-model="rc.rate"/></td>
-								<td> <input type="text"  v-model="rc.max"/></td>
-								<td> <input type="text"  v-model="rc.shareBenefit"/></td>
-							</tr>
-						</template>
-
+						<tr>
+							<td>{{merch.rateConfigs[0].payType}}</td>
+							<td> <input type="text"  v-model="merch.rateConfigs[0].rate"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[0].max"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[0].shareBenefit"/></td>
+						</tr>
+						<tr>
+							<td>{{merch.rateConfigs[1].payType}}</td>
+							<td> <input type="text"  v-model="merch.rateConfigs[1].rate"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[1].max"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[1].shareBenefit"/></td>
+						</tr>
+						<tr>
+							<td>{{merch.rateConfigs[2].payType}}</td>
+							<td> <input type="text"  v-model="merch.rateConfigs[2].rate"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[2].max"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[2].shareBenefit"/></td>
+						</tr>
+						<tr>
+							<td>{{merch.rateConfigs[3].payType}}</td>
+							<td> <input type="text"  v-model="merch.rateConfigs[3].rate"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[3].max"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[3].shareBenefit"/></td>
+						</tr>
+						<tr>
+							<td>{{merch.rateConfigs[4].payType}}</td>
+							<td> <input type="text"  v-model="merch.rateConfigs[4].rate"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[4].max"/></td>
+							<td> <input type="text"  v-model="merch.rateConfigs[4].shareBenefit"/></td>
+						</tr>
 						</tbody>
-
-
 					</table>
 				</div>
 			</div>

@@ -145,12 +145,18 @@ public abstract class AbstractTransDataServerImpl implements ITransDataService {
         fixResult(result);
         result.setAmt(CommonUtil.formatAB(result.getAmt()));
         if(result.getShareBenefit()!=null) {
-            result.setShareBenefit(result.getShareBenefit() / 100);
+
+            result.setServiceCharge(CommonUtil.fixFeng2Yuan(result.getShareBenefit()));
+               // result.setShareBenefit(result.getShareBenefit() / 100);
+
         }
         if(result.getServiceCharge() != 0) {
-            result.setServiceCharge(result.getServiceCharge() / 100);
+            result.setServiceCharge(CommonUtil.fixFeng2Yuan(result.getServiceCharge()));
+              //  result.setServiceCharge(result.getServiceCharge() / 100);
+
         }
         SysDeptEntity mc = sysDeptDao.queryObject(result.getParentMc());
+        if(mc != null)
         result.setAgencyName(mc.getName());
        // System.out.println(result.getParentMc());
     }

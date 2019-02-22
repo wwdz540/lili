@@ -28,6 +28,12 @@ public class CommonUtil {
         BigDecimal result = b.divide(BigDecimal.valueOf(100l),2,BigDecimal.ROUND_HALF_UP);
         return result.toString();
     }
+
+    public static double fixFeng2Yuan(double f){
+        BigDecimal b = BigDecimal.valueOf(f);
+        BigDecimal result = b.divide(BigDecimal.valueOf(100l),2,BigDecimal.ROUND_HALF_UP);
+        return result.doubleValue();
+    }
     public static BigDecimal sharePoint(BigDecimal amt, String cardTypeCode){
         return sharePoint(amt,cardTypeCode,null);
     }

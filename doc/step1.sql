@@ -58,12 +58,6 @@ delete from QRTZ_TRIGGERS;
 delete from QRTZ_JOB_DETAILS;
 
 
-delete from  sys_user_role where user_id=300;
-delete from sys_user where user_id=300;
-delete from sys_role_menu where role_id in( 10,11);
-delete from sys_role where role_id in(10,11);
-delete from sys_menu where menu_id > 89;
-
 ###创建菜单
 INSERT INTO sys_menu (menu_id, parent_id, name, url, perms, type, icon, order_num)
 VALUES

@@ -61,47 +61,47 @@
         <a class="btn btn-default" @click="query">查询</a>
 
     </div>
-<table class="table table-bordered">
-    <tr>
-        <th>
-            代理/商户名称
-        </th>
-        <th>
-            总数条数
-        </th>
-        <th>
-            平均每单
-        </th>
-        <th>
-            总金额
-        </th>
-        <th>
-            分润
-        </th>
-    </tr>
-     <tr v-for = "n in list">
-        <td>
+<!--<table class="table table-bordered">-->
+    <!--<tr>-->
+        <!--<th>-->
+            <!--代理/商户名称-->
+        <!--</th>-->
+        <!--<th>-->
+            <!--总数条数-->
+        <!--</th>-->
+        <!--<th>-->
+            <!--平均每单-->
+        <!--</th>-->
+        <!--<th>-->
+            <!--总金额-->
+        <!--</th>-->
+        <!--<th>-->
+            <!--分润-->
+        <!--</th>-->
+    <!--</tr>-->
+     <!--<tr v-for = "n in list">-->
+        <!--<td>-->
 
-            {{n.name}}
-            <template v-if="n.dtype==2">
-                <span style="color:blue">[代理]</span>
-            </template>
-        </td>
-        <td>
-            {{n.count == null ? 0 : n.count}}
-        </td>
-         <td>
-             {{formatNumber(n.avg)}}
-         </td>
-         <td>
-             {{formatNumber(n.sum)}}
-         </td>
-         <td>
-             {{formatNumber(n.sharePoint)}}
+            <!--{{n.name}}-->
+            <!--<template v-if="n.dtype==2">-->
+                <!--<span style="color:blue">[代理]</span>-->
+            <!--</template>-->
+        <!--</td>-->
+        <!--<td>-->
+            <!--{{n.count == null ? 0 : n.count}}-->
+        <!--</td>-->
+         <!--<td>-->
+             <!--{{formatNumber(n.avg)}}-->
+         <!--</td>-->
+         <!--<td>-->
+             <!--{{formatNumber(n.sum)}}-->
+         <!--</td>-->
+         <!--<td>-->
+             <!--{{formatNumber(n.sharePoint)}}-->
 
-         </td>
-    </tr>
-</table>
+         <!--</td>-->
+    <!--</tr>-->
+<!--</table>-->
 
 </div>
 <div id="deptLayer" style="display: none;padding:10px;">
