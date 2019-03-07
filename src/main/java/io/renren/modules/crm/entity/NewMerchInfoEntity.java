@@ -53,6 +53,9 @@ public class NewMerchInfoEntity {
     //@TODO
     private int deptType;
 
+    private String userName;
+    private String password;
+
     private List<RateConfig> rateConfigs;
 
     @Transient
@@ -252,5 +255,21 @@ public class NewMerchInfoEntity {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

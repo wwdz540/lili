@@ -247,6 +247,8 @@ var vm = new Vue({
             vm.merch.address='';
             vm.merch.status='';
             vm.merch.industry='';
+            vm.merch.userName="";
+            vm.merch.password = "";
         }
 	}
 });

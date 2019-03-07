@@ -43,12 +43,9 @@ public class NewMerchInfoController extends BaseController {
             params.put("orDeptId",params.get("parentId"));
         }
 
-
         //处理查询参数问题
         Query query = new Query(params);
         List<NewMerchInfoEntity> list = service.queryList(query);
-
-
 
         int total = service.queryTotal(query);
         PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
@@ -70,6 +67,8 @@ public class NewMerchInfoController extends BaseController {
             }
 
         }
+        System.out.println("user name:"+entity.getUserName());
+        System.out.println("password:"+entity.getPassword());
 
        // System.out.println("deptType"+entity.getDeptType());
             switch (parent.getDeptType()){

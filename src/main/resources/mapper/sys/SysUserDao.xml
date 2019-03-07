@@ -13,6 +13,9 @@
 			<if test="username != null and username.trim() != ''">
 				and u.`username` like concat('%',#{username},'%')
 			</if>
+			<if test="mcId != null">
+				and u.mc_id=#{mcId}
+			</if>
 
 			<!--<if test="leader != null">-->
 				<!--and u.`leader`  = #{leader}-->
@@ -40,6 +43,9 @@
 		<where>
 			<if test="username != null and username.trim() != ''">
 				and u.`username` like concat('%',#{username},'%')
+			</if>
+			<if test="mcId != null ">
+				and u.mc_id=#{mcId}
 			</if>
 			<!--<if test="leader != null">-->
 				<!--and u.`leader`  = #{leader}-->

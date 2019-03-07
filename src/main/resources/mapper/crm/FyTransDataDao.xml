@@ -4,7 +4,7 @@
 <mapper namespace="io.renren.modules.crm.dao.FyTransDataDao">
 
     <sql id="cnd">
-        m.enabled = 1
+       1 = 1
         <if test="path != null and path.trim() !=''">
             and dept.path like concat(#{path},'%')
         </if>

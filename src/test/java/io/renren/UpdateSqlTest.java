@@ -9,12 +9,14 @@ import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import io.renren.modules.sys.service.SysUserService;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,8 +56,7 @@ public class UpdateSqlTest {
         for (Long agenId : agenIds) {
 
             if(agenId == null) continue;
-           SysUserEntity agen = userDao.findOne(agenId);
-
+            SysUserEntity agen = userDao.findOne(agenId);
 
             SysDeptEntity dept = new SysDeptEntity();
             dept.setParentId(1l);
@@ -65,15 +66,9 @@ public class UpdateSqlTest {
             dept.setIndustry("");
             dept.setLegalName("");
 
-
             sysDeptService.save(dept);
-
             jdbcTemplate.execute("update sys_user set mc_id = "+dept.getMcId() +" where user_id = "+agenId);
-
-
             update(dept.getMcId(),4,agen);
-
-
         }
         SysUserEntity u = new SysUserEntity();
         u.setUserId(1l);
@@ -169,7 +164,7 @@ public class UpdateSqlTest {
         return parentPath;
     }
 
-    @Test
+   // @Test
     public void updatePath(){
 
 
@@ -207,10 +202,55 @@ public class UpdateSqlTest {
 
     }
 
+    @Test
+  //  @Transactional
+    public void updateDate4McIdIsNull(){
+        List<Map<String, Object>> forUpdats = jdbcTemplate.queryForList("select * from merch_info where mc_id is null");
+
+
+        for (Map<String, Object> forUpdat : forUpdats) {
+            long willUpdateId = Long.parseLong(forUpdat.get("id").toString());
+
+            long agenId = 1;
+            Object userId = forUpdat.get("user_id");
+            if(userId != null){
+               Map<String,Object> userMap =  jdbcTemplate.queryForMap("select * from sys_user where user_id="+userId);
+
+                agenId = Long.parseLong(userMap.get("mc_id").toString());
+
+            }
+            String agenPath;
+
+            //获取代理信息
+            Map<String, Object> am = jdbcTemplate.queryForMap("select * from merchant_main where mc_id=" + agenId);
+            agenPath = am.get("path").toString();
+         //   System.out.println(agenPath);
+            System.out.println("agency is "+ am.get("name"));
+
+
+            SysDeptEntity mc = new SysDeptEntity();
+            mc.setName(forUpdat.get("merch_name").toString());
+            if(forUpdat.get("legal_name")!=null)
+            mc.setLegalName(forUpdat.get("legal_name").toString());
+            mc.setParentId(agenId);
+            mc.setParentName(am.get("name").toString());
+
+            sysDeptService.save(mc);
+
+            String path = agenPath +"-"+ StringUtils.leftPad(
+                           mc.getMcId()+"",10,'0');
+            mc.setPath(path);
+            sysDeptService.update(mc);
+
+            String updateSql = "update merch_info set mc_id= ? where id = "+willUpdateId;
+            jdbcTemplate.update(updateSql,mc.getMcId());
+        }
+
+    }
+
 //    @Test
 //    public void updatePath(){
 //     // List<SysDeptEntity> list = sysDeptService.getSubDeptIdList(1l);
-//
 //
 //
 //            deptEntity.setPath(

@@ -14,7 +14,7 @@ spring:
         active: dev
     # jackson时间格式化
     jackson:
-        time-zone: GMT+8
+        time-zone: GMT+8s
         date-format: yyyy-MM-dd HH:mm:ss
     http:
         multipart:
